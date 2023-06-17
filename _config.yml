@@ -17,4 +17,4 @@ header_pages:
 exclude:
   - .gitignore
   - README.md
-  - LICENSE
+  - LICENSE.md
