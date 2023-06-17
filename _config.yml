@@ -9,9 +9,8 @@ linkedin_username: eddarmitage
 rss: rss
 
 header_pages:
-  - frontpage.md
-  - about.md
-  - archive.md
+  - _pages/about.md
+  - _pages/archive.md
 
 exclude:
   - .gitignore
