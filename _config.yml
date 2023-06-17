@@ -4,13 +4,15 @@ title: Edd Armitage - Software Engineer
 description: The personal website of a software engineer
 author: Edd Armitage
 
+show_excerpts: true
+
 github_username: eddarmitage
 linkedin_username: eddarmitage
 rss: rss
 
 header_pages:
-  - _pages/about.md
-  - _pages/archive.md
+  - about.md
+  - archive.md
 
 exclude:
   - .gitignore
