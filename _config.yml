@@ -1,7 +1,7 @@
 theme: minima
 
 title: Edd Armitage - Software Engineer
-description: My personal website
+description: Personal website of a software engineer
 author: Edd Armitage
 
 github_username: eddarmitage
@@ -9,9 +9,9 @@ linkedin_username: eddarmitage
 rss: rss
 
 header_pages:
-  - _pages/frontpage.md
-  - _pages/about.md
-  - _pages/archive.md
+  - frontpage.md
+  - about.md
+  - archive.md
 
 exclude:
   - .gitignore
