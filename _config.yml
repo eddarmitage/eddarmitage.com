@@ -4,7 +4,7 @@ title: Edd Armitage - Software Engineer
 description: The personal website of a software engineer
 author: Edd Armitage
 
-permalink: pretty
+permalink: /:categories/:year/:month/:title
 show_excerpts: true
 
 github_username: eddarmitage
