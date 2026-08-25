@@ -71,7 +71,16 @@ in Safari (desktop and iOS), not just Chromium browsers.
 ## Build & dev
 
 - `hugo server -D` — local dev with drafts.
-- `hugo --gc --minify` — production build (what Cloudflare Pages runs).
+- `./scripts/build.sh` — what Cloudflare Pages runs (both production and
+  preview deployments share this one build command). On the `main` branch it
+  runs the normal `hugo --gc --minify`; on any other branch it additionally
+  passes `-b "$CF_PAGES_URL"` to override `baseURL` with the preview
+  deployment's own `*.pages.dev` URL. Without this, Hugo bakes the production
+  `baseURL` from `hugo.toml` into every `.Permalink`-derived link (RSS,
+  canonical tags, favicons, "continue reading" links, etc.), so preview
+  builds would otherwise link back to production instead of themselves.
+  `CF_PAGES_BRANCH` and `CF_PAGES_URL` are injected automatically by
+  Cloudflare Pages — nothing to configure per-environment.
 - Keep the `HUGO_VERSION` env var on the Cloudflare Pages project in sync with
   whatever Hugo version is used locally/in CI — check `hugo version`.
 
