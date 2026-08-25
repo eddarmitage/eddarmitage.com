@@ -1,6 +1,6 @@
 baseURL = "https://eddarmitage.com/"
 locale = "en-GB"
-title = "Edd Armitage - Software Engineer"
+title = "Edd Armitage-King - Software Engineer"
 
 uglyURLs = true
 disableKinds = ["taxonomy", "term"]
@@ -31,7 +31,7 @@ disableKinds = ["taxonomy", "term"]
 
 [params]
   description = "The personal website of a software engineer"
-  author = "Edd Armitage"
+  author = "Edd Armitage-King"
   mainSections = ["posts", "photos", "food"]
 
   [params.assets]
