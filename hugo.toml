@@ -1,6 +1,6 @@
 baseURL = "https://eddarmitage.com/"
 locale = "en-GB"
-title = "Edd Armitage-King - Software Engineer"
+title = "Edd Armitage-King"
 
 uglyURLs = true
 disableKinds = ["taxonomy", "term"]
