@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
 {{- $feedSections := slice "posts" "photos" "food" }}
 {{- $items := where site.RegularPages "Section" "in" $feedSections }}
 {{- $items = $items.ByDate.Reverse }}
