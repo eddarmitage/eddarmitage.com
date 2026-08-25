@@ -1,0 +1,19 @@
+{{- define "main" }}
+<section class="projects-section">
+  <h1>{{ .Title }}</h1>
+  <p class="sub">{{ with .Params.description }}{{ . }}{{ else }}Galleries from what I've been up to.{{ end }}</p>
+  <div class="projects-grid">
+    {{- range .Pages.ByDate.Reverse }}
+    <article class="project-card">
+      <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+      <p>{{ with .Params.description }}{{ . }}{{ else }}{{ .Summary | plainify }}{{ end }}</p>
+      <div class="project-links"><a href="{{ .Permalink }}">View gallery &rarr;</a></div>
+    </article>
+    {{- end }}
+    <article class="project-card empty-state">
+      <div class="eyebrow">More soon</div>
+      <p>Nothing here yet &mdash; the slot's ready, that's fine.</p>
+    </article>
+  </div>
+</section>
+{{- end }}{{/* end main */}}

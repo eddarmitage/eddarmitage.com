@@ -1,0 +1,14 @@
+{{- define "main" }}
+{{- $feedSections := slice "posts" "photos" "food" }}
+{{- $items := where site.RegularPages "Section" "in" $feedSections }}
+{{- $items = $items.ByDate.Reverse }}
+<section class="feed">
+  {{- if $items }}
+  {{- range $items }}
+  {{- partial "feed-item.html" . }}
+  {{- end }}
+  {{- else }}
+  <p>Nothing published yet.</p>
+  {{- end }}
+</section>
+{{- end }}{{/* end main */}}

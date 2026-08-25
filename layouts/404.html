@@ -1,3 +1,6 @@
 {{- define "main" }}
-<div class="not-found">Oh no. That page seems to be missing.</div>
+<div class="not-found">
+  <p>Oh no. That page seems to be missing.</p>
+  <p><a href="{{ "/" | relURL }}">Back to the front page &rarr;</a></p>
+</div>
 {{- end }}{{/* end main */ -}}

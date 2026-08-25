@@ -1,0 +1,35 @@
+{{- /* Renders one home/section feed card. Context: a regular Page from posts/photos/food. */}}
+{{- $isLink := .Params.externalURL }}
+{{- $isPhotos := eq .Section "photos" }}
+{{- $isFood := eq .Section "food" }}
+{{- $tag := "Article" }}
+{{- if $isLink }}{{ $tag = "Link" }}{{ else if $isPhotos }}{{ $tag = "Photos" }}{{ else if $isFood }}{{ $tag = "Food" }}{{ end }}
+{{- $href := .Permalink }}
+{{- if $isLink }}{{ $href = $isLink }}{{ end }}
+
+<article class="feed-item{{ if $isLink }} link-post{{ end }}">
+  <div class="feed-meta">
+    <span class="tag">{{ $tag }}</span> {{ .Date.Format "2 Jan 2006" }}{{ if eq $tag "Article" }} &middot; {{ .ReadingTime }} min read{{ end }}
+  </div>
+  <h3>
+    {{- if $isLink }}
+    <a href="{{ $href }}" target="_blank" rel="noopener noreferrer">{{ .Title }}</a>
+    {{- else }}
+    <a href="{{ $href }}">{{ .Title }}</a>
+    {{- end }}
+  </h3>
+  <p>{{ with .Params.description }}{{ . }}{{ else }}{{ .Summary | plainify }}{{ end }}</p>
+  {{- if eq $tag "Article" }}
+  <a class="more" href="{{ .Permalink }}">Continue reading &rarr;</a>
+  {{- end }}
+  {{- if $isPhotos }}
+  {{- $images := .Resources.ByType "image" }}
+  {{- with $images }}
+  <div class="thumb-row">
+    {{- range first 4 . }}
+    <div class="thumb"><img src="{{ .RelPermalink }}" alt="{{ .Title }}" loading="lazy"></div>
+    {{- end }}
+  </div>
+  {{- end }}
+  {{- end }}
+</article>

@@ -1,0 +1,2 @@
+{{- $num := .Get "num" | default (.Get 0) }}
+<div class="sidenote"><span class="num">{{ $num }}</span> &mdash; {{ .Inner }}</div>

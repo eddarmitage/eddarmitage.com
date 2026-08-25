@@ -2,6 +2,7 @@
 title: "Home Network"
 date: 2025-12-05
 draft: true
+summary: "Ubiquiti gear, VLANs for Sonos and Home Assistant, and the write-up of getting it all to play nicely together."
 ---
 
 My Home Network

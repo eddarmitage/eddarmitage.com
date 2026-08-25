@@ -11,12 +11,31 @@ of truth for the site's intended visual design (bespoke typography, sidenotes,
 TOC, content-type tags, print stylesheet, Writing/Projects/Photos/Food/About
 nav) — implement against these, not from scratch.
 
-**The current build does not yet match this spec.** It's running the stock
-PaperMod theme (`themes/PaperMod`) as an interim placeholder so the Cloudflare
-Pages migration could ship independently of the design work. Building the
-custom theme described in `design/` is a separate, not-yet-started piece of
-work — don't assume PaperMod's structure (menus, archive layout, RSS partial,
-etc.) is the target; check `design/DESIGN.md` first.
+The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
+(no theme submodule — PaperMod has been removed). Key pieces:
+
+- `layouts/baseof.html` + `layouts/_partials/{head,header,footer,social-icons,feed-item}.html`
+  — shared chrome.
+- `layouts/posts/single.html` — article template (preface, auto-generated TOC
+  from `.TableOfContents`, footnotes via goldmark). Sidenotes and "back to
+  contents" links are authored per-article via the `{{< sidenote >}}`,
+  `{{< ref >}}` and `{{< backtotoc >}}` shortcodes in `layouts/_shortcodes/`
+  — use angle-bracket `{{< >}}` delimiters for these, not `{{% %}}`, since
+  goldmark's `unsafe = false` strips raw HTML emitted by percent-delimited
+  shortcode output.
+- `layouts/posts/single.html` also handles Link-type posts (front matter
+  `externalURL` set) with a stripped-down template instead of the full
+  article layout.
+- Photos/Food/Projects each have `list.html` (card grid + a permanent
+  "More soon" empty-state card) and `single.html` (gallery grid / recipe
+  card respectively).
+- Home feed (`layouts/index.html`, `layouts/index.rss.xml`) aggregates
+  `posts` + `photos` + `food` sections by date; `projects` is excluded
+  (standalone page per the design spec).
+- `[outputs]` in `hugo.toml` restricts non-home page kinds to `["HTML"]` —
+  Hugo's default of also emitting RSS for every section would otherwise
+  scatter stray `/posts/feed.xml`-style files and defeat `uglyURLs` on
+  those sections.
 
 ## Content conventions
 

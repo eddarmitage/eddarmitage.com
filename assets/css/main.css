@@ -1,0 +1,335 @@
+/* ============================================================
+   TOKENS
+   Single baked-in accent (orange) — no runtime theme switcher.
+   See design/DESIGN.md for the source spec.
+   ============================================================ */
+:root{
+  --bg: #ffffff;
+  --bg-subtle: #f5f6f8;
+  --bg-inset: #eef0f3;
+  --text: #14171c;
+  --text-muted: #5b6472;
+  --border: #e3e6ea;
+
+  --font-serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+
+  --accent: #E8541F;
+  --accent-soft: #FBEAE2;
+  --accent-strong: #B23E14;
+
+  --measure: 640px;
+  --note-width: 220px;
+  --note-gap: 28px;
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-sans);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+a{ color:inherit; }
+img{ max-width:100%; display:block; }
+::selection{ background:var(--accent-soft); }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+}
+
+/* ============================================================
+   SITE CHROME
+   ============================================================ */
+.site-header{
+  max-width:900px; margin:0 auto; padding:28px 20px 20px;
+  display:flex; align-items:baseline; justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.wordmark{
+  font-family:var(--font-serif); font-size:22px; font-weight:700;
+  text-decoration:none; color:var(--text);
+}
+.wordmark span{ color:var(--accent); }
+.site-header nav{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; flex:1; }
+.site-header nav a{
+  font-family:var(--font-sans); font-size:14px; text-decoration:none;
+  color:var(--text-muted);
+}
+.site-header nav a:hover{ color:var(--text); }
+.site-header nav a[aria-current="page"]{ color:var(--accent-strong); font-weight:600; }
+.nav-icons{ display:flex; align-items:center; gap:14px; margin-left:auto; }
+.icon-btn{ display:inline-flex; color:var(--text-muted); }
+.icon-btn:hover{ color:var(--accent); }
+.icon-btn svg{ width:17px; height:17px; }
+
+@media (max-width:700px){
+  .site-header{ flex-direction:column; align-items:flex-start; gap:14px; }
+  .site-header nav{ gap:14px; }
+  .nav-icons{ margin-left:0; }
+}
+
+main{ max-width:900px; margin:0 auto; padding:0 20px; }
+
+/* ============================================================
+   HOME FEED
+   Tags encode content type — reader knows before clicking whether
+   something is a full article, an outbound link, a gallery or a
+   recipe.
+   ============================================================ */
+.feed{ padding:36px 0 10px; max-width:var(--measure); }
+.feed-item{ padding:26px 0; border-bottom:1px solid var(--border); }
+.feed-item:first-child{ padding-top:0; }
+.tag{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--accent-strong);
+  background:var(--accent-soft); padding:2px 7px; border-radius:3px;
+}
+.feed-meta{
+  display:flex; align-items:center; gap:10px; margin-bottom:8px;
+  font-family:var(--font-mono); font-size:12px; color:var(--text-muted);
+}
+.feed-item h3{
+  font-family:var(--font-serif); font-size:22px; margin:0 0 8px; line-height:1.3;
+}
+.feed-item h3 a{ text-decoration:none; }
+.feed-item h3 a:hover{ text-decoration:underline; text-decoration-color:var(--accent); }
+.feed-item p{ margin:0 0 8px; color:#333; }
+.feed-item .more{
+  font-family:var(--font-mono); font-size:13px; color:var(--accent-strong);
+  text-decoration:none;
+}
+.link-post h3::before{ content:"→ "; color:var(--accent); }
+.thumb-row{ display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.thumb-row .thumb{ width:64px; height:44px; border-radius:3px; overflow:hidden; }
+.thumb-row .thumb img{ width:100%; height:100%; object-fit:cover; }
+
+/* ============================================================
+   ARTICLE — Preface / TOC / Article, with margin sidenotes
+   ============================================================ */
+.article-wrap{ max-width:900px; margin:0 auto; padding:44px 20px 10px; }
+.article-head{ max-width:var(--measure); }
+.article-head .feed-meta{ margin-bottom:14px; }
+.print-btn{
+  font-family:var(--font-mono); font-size:12px; color:var(--text-muted);
+  background:none; border:1px solid var(--border); border-radius:4px;
+  padding:3px 9px; cursor:pointer; margin-left:auto;
+}
+.print-btn:hover{ border-color:var(--accent); color:var(--accent-strong); }
+h1.title{
+  font-family:var(--font-serif); font-size:38px; line-height:1.15;
+  margin:0 0 18px;
+}
+@media (max-width:480px){
+  h1.title{ font-size:28px; }
+  .preface{ font-size:17px; }
+  .article-wrap{ padding-top:32px; }
+  .site-header{ padding-top:20px; }
+}
+.preface{
+  font-family:var(--font-serif); font-size:19px; font-style:italic;
+  color:#333; max-width:var(--measure); margin:0 0 26px; line-height:1.55;
+}
+.toc{
+  max-width:var(--measure); border:1px solid var(--border); border-radius:6px;
+  padding:16px 20px; margin:0 0 40px; background:var(--bg-subtle);
+}
+.toc-label{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em;
+  text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;
+}
+.toc nav{ display:block; }
+.toc ol, .toc ul{ list-style:none; margin:0; padding:0; counter-reset:toc; }
+.toc ul ul{ counter-reset:none; padding-left:20px; }
+.toc li{ counter-increment:toc; margin:4px 0; }
+.toc li::before{
+  content:counter(toc, decimal-leading-zero); font-family:var(--font-mono);
+  font-size:12px; color:var(--accent-strong); margin-right:10px;
+}
+.toc a{ text-decoration:none; font-size:15px; }
+.toc a:hover{ text-decoration:underline; }
+
+.article-body{ max-width:var(--measure); font-family:var(--font-serif); font-size:17px; }
+.article-body h2{
+  font-family:var(--font-serif); font-size:24px; margin:40px 0 14px;
+  scroll-margin-top:70px;
+}
+.article-body p{ margin:0 0 16px; }
+.article-body img{ max-width:100%; border-radius:6px; margin:0 0 20px; }
+.back-to-toc{
+  display:inline-block; font-family:var(--font-mono); font-size:11px;
+  color:var(--text-muted); text-decoration:none; margin:2px 0 26px;
+}
+.back-to-toc:hover{ color:var(--accent-strong); }
+
+/* Sidenotes: float into the margin gutter on wide screens,
+   collapse to an inline callout on narrow ones. Single source
+   of content — no duplication needed. */
+.sidenote{
+  float:right; clear:right;
+  width:var(--note-width);
+  margin-right:calc(-1 * (var(--note-width) + var(--note-gap)));
+  margin-top:2px;
+  font-family:var(--font-sans); font-size:13px; line-height:1.5;
+  color:var(--text-muted);
+  border-left:2px solid var(--accent); padding-left:10px;
+}
+.sidenote .num{ color:var(--accent-strong); font-family:var(--font-mono); }
+sup.ref{ color:var(--accent-strong); font-family:var(--font-mono); font-size:11px; }
+
+@media (max-width: 1099px){
+  .sidenote{
+    float:none; width:auto; margin:14px 0; padding:10px 12px;
+    background:var(--bg-subtle); border-left:3px solid var(--accent);
+  }
+}
+
+pre{
+  background:#1c1f24; color:#d9dde3; border-radius:6px;
+  padding:16px 18px; overflow-x:auto; margin:0 0 20px;
+  border-left:3px solid var(--accent);
+}
+code{ font-family:var(--font-mono); font-size:13px; }
+p code, li code{
+  background:var(--bg-inset); padding:1px 5px; border-radius:3px; font-size:0.85em;
+}
+/* Chroma applies its own "chroma" class directly to the <pre> it renders,
+   inside a wrapping .highlight div — style the pre itself. */
+.highlight{ margin:0 0 20px; }
+pre.chroma{ margin:0; }
+
+.footnotes{
+  max-width:var(--measure); margin-top:20px; padding-top:20px;
+  border-top:1px solid var(--border);
+  font-family:var(--font-sans); font-size:14px; color:var(--text-muted);
+}
+.footnotes ol{ padding-left:20px; }
+.footnotes li{ margin-bottom:8px; }
+.footnotes hr{ display:none; }
+
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+.projects-section{ max-width:900px; margin:0 auto; padding:50px 20px 60px; }
+.projects-section h1{ font-family:var(--font-serif); font-size:26px; margin:0 0 4px; }
+.projects-section .sub{ color:var(--text-muted); margin:0 0 20px; font-size:14px; }
+.projects-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
+.project-card{ border:1px solid var(--border); border-radius:8px; padding:20px 22px; }
+.project-card h2{ font-family:var(--font-serif); font-size:18px; margin:0 0 8px; }
+.project-card p{ font-size:14px; color:#333; margin:0 0 14px; }
+.project-links{ display:flex; gap:16px; font-family:var(--font-mono); font-size:12px; }
+.project-links a{ color:var(--accent-strong); text-decoration:none; }
+.project-links a:hover{ text-decoration:underline; }
+
+/* Reusable pattern for a section with nothing in it yet.
+   Same card shape as populated content, dashed instead of solid,
+   so it reads as "reserved" rather than "broken". */
+.empty-state{
+  border-style:dashed; background:var(--bg-subtle);
+  display:flex; flex-direction:column; justify-content:center;
+}
+.empty-state .eyebrow{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;
+}
+.empty-state p{ color:var(--text-muted); font-style:italic; margin:0; font-size:14px; }
+
+
+.gallery-section{ max-width:900px; margin:0 auto; padding:50px 20px 60px; }
+.gallery-section h1{ font-family:var(--font-serif); font-size:26px; margin:0 0 4px; }
+.gallery-section .sub{ color:var(--text-muted); margin:0 0 20px; font-size:14px; }
+.gallery-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr));
+  gap:12px;
+}
+.gallery-grid figure{ margin:0; }
+.gallery-grid figure a{
+  display:block; aspect-ratio:4/3; border-radius:6px; overflow:hidden;
+  border:1px solid var(--border);
+}
+.gallery-grid figure a img{ width:100%; height:100%; object-fit:cover; }
+.gallery-grid .ph{
+  aspect-ratio:4/3; border-radius:6px;
+  background:linear-gradient(135deg, var(--accent-soft), var(--bg-inset));
+  border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:11px; color:var(--accent-strong);
+}
+.gallery-grid figcaption{
+  font-family:var(--font-mono); font-size:11px; color:var(--text-muted);
+  margin-top:6px;
+}
+
+/* ============================================================
+   RECIPE
+   ============================================================ */
+.recipe-section{ max-width:900px; margin:0 auto; padding:50px 20px 60px; }
+.recipe-card{
+  max-width:var(--measure); border:1px solid var(--border); border-radius:8px;
+  padding:24px 26px; background:var(--bg-subtle);
+}
+.recipe-card h1{ font-family:var(--font-serif); font-size:24px; margin:0 0 4px; }
+.recipe-card .sub{ color:var(--text-muted); font-size:14px; margin:0 0 18px; }
+.recipe-cols{ display:grid; grid-template-columns:1fr 1.6fr; gap:26px; }
+.recipe-cols h4{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--accent-strong); margin:0 0 10px;
+}
+.recipe-cols ul, .recipe-cols ol{ margin:0; padding-left:18px; font-size:14px; }
+.recipe-cols li{ margin-bottom:8px; }
+.recipe-note{ margin-top:26px; }
+@media (max-width:600px){ .recipe-cols{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   GENERIC PAGE (About, etc.)
+   ============================================================ */
+.page-section{ max-width:900px; margin:0 auto; padding:44px 20px 60px; }
+.page-section .page-body{
+  max-width:var(--measure); font-family:var(--font-serif); font-size:17px;
+}
+.page-section h1.title{ max-width:var(--measure); }
+.page-section .page-body p{ margin:0 0 16px; }
+.page-section .project-links{ margin:0 0 24px; }
+
+/* ============================================================
+   404
+   ============================================================ */
+.not-found{
+  max-width:var(--measure); margin:0 auto; padding:80px 20px;
+  font-family:var(--font-serif); font-size:19px; text-align:center;
+  color:var(--text-muted);
+}
+.not-found p{ margin:0 0 12px; }
+.not-found a{ color:var(--accent-strong); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer{
+  max-width:900px; margin:60px auto 0; padding:24px 20px 40px;
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:14px;
+}
+.social{ display:flex; gap:14px; }
+.social a{ color:var(--text-muted); }
+.social a:hover{ color:var(--accent); }
+.social svg{ width:19px; height:19px; }
+.site-footer small{ color:var(--text-muted); font-family:var(--font-mono); font-size:12px; }
+
+/* ============================================================
+   PRINT — nav, footer and thumbnails drop out; sidenotes fall
+   inline; single serif column.
+   ============================================================ */
+@media print{
+  .site-header nav, .icon-btn, .site-footer, .print-btn{ display:none !important; }
+  body{ font-size:12pt; }
+  .sidenote{ float:none; width:auto; margin:8px 0; border-left:1px solid #999; background:none; }
+  a{ text-decoration:none; color:#000; }
+  .toc{ border:1px solid #999; background:none; }
+}

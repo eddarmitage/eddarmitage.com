@@ -1,7 +1,6 @@
 baseURL = "https://eddarmitage.com/"
-locale = "en-gb"
+locale = "en-GB"
 title = "Edd Armitage - Software Engineer"
-theme = "PaperMod"
 
 uglyURLs = true
 disableKinds = ["taxonomy", "term"]
@@ -15,16 +14,25 @@ disableKinds = ["taxonomy", "term"]
 
 [outputs]
   home = ["HTML", "RSS"]
+  section = ["HTML"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
+  page = ["HTML"]
+
+[markup.goldmark.renderer]
+  unsafe = false
+
+[markup.goldmark.extensions.footnote]
+  enable = true
+
+[markup.highlight]
+  noClasses = false
+  style = "monokai"
 
 [params]
   description = "The personal website of a software engineer"
   author = "Edd Armitage"
-  ShowReadingTime = false
-  ShowShareButtons = false
-  ShowPostNavLinks = true
-  ShowBreadCrumbs = false
-  ShowCodeCopyButtons = true
-  mainSections = ["posts"]
+  mainSections = ["posts", "photos", "food"]
 
   [params.assets]
     favicon = "assets/favicon.ico"
@@ -40,17 +48,39 @@ disableKinds = ["taxonomy", "term"]
     url = "https://github.com/eddarmitage"
 
   [[params.socialIcons]]
+    name = "instagram"
+    url = "https://www.instagram.com/eddarmitage"
+
+  [[params.socialIcons]]
     name = "linkedin"
     url = "https://www.linkedin.com/in/eddarmitage"
+
+[[menu.main]]
+  identifier = "writing"
+  name = "Writing"
+  url = "/posts/"
+  weight = 10
+
+[[menu.main]]
+  identifier = "projects"
+  name = "Projects"
+  url = "/projects/"
+  weight = 20
+
+[[menu.main]]
+  identifier = "photos"
+  name = "Photos"
+  url = "/photos/"
+  weight = 30
+
+[[menu.main]]
+  identifier = "food"
+  name = "Food"
+  url = "/food/"
+  weight = 40
 
 [[menu.main]]
   identifier = "about"
   name = "About"
   url = "/about"
-  weight = 10
-
-[[menu.main]]
-  identifier = "archive"
-  name = "Archive"
-  url = "/archive"
-  weight = 20
+  weight = 50

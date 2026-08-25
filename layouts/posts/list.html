@@ -1,0 +1,12 @@
+{{- define "main" }}
+<section class="feed">
+  {{- $pages := .Pages.ByDate.Reverse }}
+  {{- if $pages }}
+  {{- range $pages }}
+  {{- partial "feed-item.html" . }}
+  {{- end }}
+  {{- else }}
+  <p>Nothing published yet.</p>
+  {{- end }}
+</section>
+{{- end }}{{/* end main */}}
