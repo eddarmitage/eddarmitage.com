@@ -3,4 +3,4 @@ title: "About me"
 hiddenInRss: true
 ---
 
-I'm Edd, a Software Engineer currently based in London, UK.
+I'm Edd Armitage-King, a Software Engineer currently based in London, UK.
