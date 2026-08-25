@@ -1,0 +1,20 @@
+{{- define "main" }}
+{{- $images := .Resources.ByType "image" }}
+<section class="gallery-section">
+  <h1>{{ .Title }}</h1>
+  {{- with .Params.description }}<p class="sub">{{ . }}</p>{{- end }}
+  <div class="gallery-grid">
+    {{- range $images }}
+    <figure>
+      <a href="{{ .RelPermalink }}" target="_blank" rel="noopener">
+        <img src="{{ .RelPermalink }}" alt="{{ .Params.alt | default .Title }}" loading="lazy">
+      </a>
+      {{- with .Title }}<figcaption>{{ . }}</figcaption>{{- end }}
+    </figure>
+    {{- end }}
+  </div>
+  <div class="article-body">
+    {{ .Content }}
+  </div>
+</section>
+{{- end }}{{/* end main */}}

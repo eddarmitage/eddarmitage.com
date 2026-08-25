@@ -1,0 +1,38 @@
+{{- define "main" }}
+{{- if .Params.externalURL }}
+<div class="article-wrap">
+  <div class="article-head">
+    <div class="feed-meta"><span class="tag">Link</span> {{ .Date.Format "2 Jan 2006" }}</div>
+    <h1 class="title">&rarr; <a href="{{ .Params.externalURL }}" target="_blank" rel="noopener noreferrer">{{ .Title }}</a></h1>
+  </div>
+  <div class="article-body">
+    {{ .Content }}
+    <p><a class="more" href="{{ .Params.externalURL }}" target="_blank" rel="noopener noreferrer">Read the original &rarr;</a></p>
+  </div>
+</div>
+{{- else }}
+{{- $hasHeadings := findRE "<h2" .Content 1 }}
+<div class="article-wrap">
+  <div class="article-head">
+    <div class="feed-meta">
+      <span class="tag">Article</span> {{ .Date.Format "2 Jan 2006" }} &middot; {{ .ReadingTime }} min read
+      <button class="print-btn" onclick="window.print()">Print</button>
+    </div>
+    <h1 class="title">{{ .Title }}</h1>
+    {{- with .Params.preface }}
+    <p class="preface">{{ . }}</p>
+    {{- end }}
+    {{- if $hasHeadings }}
+    <div class="toc" id="toc">
+      <div class="toc-label">Contents</div>
+      {{ .TableOfContents }}
+    </div>
+    {{- end }}
+  </div>
+
+  <div class="article-body">
+    {{ .Content }}
+  </div>
+</div>
+{{- end }}
+{{- end }}{{/* end main */}}
