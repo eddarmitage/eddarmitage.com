@@ -1,0 +1,56 @@
+baseURL = "https://eddarmitage.com/"
+locale = "en-gb"
+title = "Edd Armitage - Software Engineer"
+theme = "PaperMod"
+
+uglyURLs = true
+disableKinds = ["taxonomy", "term"]
+
+[permalinks]
+  posts = "/:year/:month/:slug"
+
+[outputFormats.RSS]
+  mediaType = "application/rss+xml"
+  baseName = "feed"
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[params]
+  description = "The personal website of a software engineer"
+  author = "Edd Armitage"
+  ShowReadingTime = false
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = false
+  ShowCodeCopyButtons = true
+  mainSections = ["posts"]
+
+  [params.assets]
+    favicon = "assets/favicon.ico"
+    favicon16x16 = "assets/favicon-16x16.png"
+    favicon32x32 = "assets/favicon-32x32.png"
+    apple_touch_icon = "assets/apple-touch-icon.png"
+    safari_pinned_tab = "assets/safari-pinned-tab.svg"
+    theme_color = "#ffffff"
+    msapplication_TileColor = "#da532c"
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/eddarmitage"
+
+  [[params.socialIcons]]
+    name = "linkedin"
+    url = "https://www.linkedin.com/in/eddarmitage"
+
+[[menu.main]]
+  identifier = "about"
+  name = "About"
+  url = "/about"
+  weight = 10
+
+[[menu.main]]
+  identifier = "archive"
+  name = "Archive"
+  url = "/archive"
+  weight = 20

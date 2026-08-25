@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eddarmitage.com — design concept</title>
+<style>
+
+/* ============================================================
+   TOKENS
+   Three accent themes share one structure. Swap data-accent on
+   <html> to preview. This is a mockup device only — the real
+   site would ship with a single accent baked in, no runtime
+   switcher (keeps the shipped HTML/CSS smaller and simpler).
+   ============================================================ */
+:root{
+  --bg: #ffffff;
+  --bg-subtle: #f5f6f8;
+  --bg-inset: #eef0f3;
+  --text: #14171c;
+  --text-muted: #5b6472;
+  --border: #e3e6ea;
+
+  --font-serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+
+  --accent: #E8541F;
+  --accent-soft: #FBEAE2;
+  --accent-strong: #B23E14;
+
+  --measure: 640px;
+  --note-width: 220px;
+  --note-gap: 28px;
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-sans);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+a{ color:inherit; }
+img{ max-width:100%; display:block; }
+::selection{ background:var(--accent-soft); }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+}
+
+/* ============================================================
+   PROTOTYPE STRIP — mockup tooling only, not part of the design.
+   Lets you jump between demo sections and preview accents live.
+   ============================================================ */
+.protobar{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; gap:16px;
+  flex-wrap:wrap;
+  padding:10px 20px;
+  background:#14171c;
+  color:#c7cdd6;
+  font-family:var(--font-mono);
+  font-size:12px;
+  border-bottom:2px dashed #3a3f47;
+}
+.protobar strong{ color:#fff; font-weight:600; }
+.protobar nav{ display:flex; gap:14px; }
+.protobar nav a{ color:#c7cdd6; text-decoration:none; }
+.protobar nav a:hover{ color:#fff; text-decoration:underline; }
+.protobar .locked{ margin-left:auto; color:#8a95a3; }
+
+/* ============================================================
+   SITE CHROME
+   ============================================================ */
+.site-header{
+  max-width:900px; margin:0 auto; padding:28px 20px 20px;
+  display:flex; align-items:baseline; justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.wordmark{
+  font-family:var(--font-serif); font-size:22px; font-weight:700;
+  text-decoration:none; color:var(--text);
+}
+.wordmark span{ color:var(--accent); }
+.site-header nav{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; flex:1; }
+.site-header nav a{
+  font-family:var(--font-sans); font-size:14px; text-decoration:none;
+  color:var(--text-muted);
+}
+.site-header nav a:hover{ color:var(--text); }
+.nav-icons{ display:flex; align-items:center; gap:14px; margin-left:auto; }
+.icon-btn{ display:inline-flex; color:var(--text-muted); }
+.icon-btn:hover{ color:var(--accent); }
+.icon-btn svg{ width:17px; height:17px; }
+
+@media (max-width:700px){
+  .site-header{ flex-direction:column; align-items:flex-start; gap:14px; }
+  .site-header nav{ gap:14px; }
+  .nav-icons{ margin-left:0; }
+}
+
+main{ max-width:900px; margin:0 auto; padding:0 20px; }
+
+/* ============================================================
+   HOME FEED
+   Tags encode content type — reader knows before clicking whether
+   something is a full article, an outbound link, a gallery or a
+   recipe.
+   ============================================================ */
+.feed{ padding:36px 0 10px; max-width:var(--measure); }
+.feed-item{ padding:26px 0; border-bottom:1px solid var(--border); }
+.feed-item:first-child{ padding-top:0; }
+.tag{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--accent-strong);
+  background:var(--accent-soft); padding:2px 7px; border-radius:3px;
+}
+.feed-meta{
+  display:flex; align-items:center; gap:10px; margin-bottom:8px;
+  font-family:var(--font-mono); font-size:12px; color:var(--text-muted);
+}
+.feed-item h3{
+  font-family:var(--font-serif); font-size:22px; margin:0 0 8px; line-height:1.3;
+}
+.feed-item h3 a{ text-decoration:none; }
+.feed-item h3 a:hover{ text-decoration:underline; text-decoration-color:var(--accent); }
+.feed-item p{ margin:0 0 8px; color:#333; }
+.feed-item .more{
+  font-family:var(--font-mono); font-size:13px; color:var(--accent-strong);
+  text-decoration:none;
+}
+.link-post h3::before{ content:"→ "; color:var(--accent); }
+.thumb-row{ display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.thumb-row .thumb{ width:64px; height:44px; border-radius:3px; }
+
+/* ============================================================
+   ARTICLE — Preface / TOC / Article, with margin sidenotes
+   ============================================================ */
+.article-wrap{ max-width:900px; margin:0 auto; padding:44px 20px 10px; }
+.article-head{ max-width:var(--measure); }
+.article-head .feed-meta{ margin-bottom:14px; }
+.print-btn{
+  font-family:var(--font-mono); font-size:12px; color:var(--text-muted);
+  background:none; border:1px solid var(--border); border-radius:4px;
+  padding:3px 9px; cursor:pointer; margin-left:auto;
+}
+.print-btn:hover{ border-color:var(--accent); color:var(--accent-strong); }
+h1.title{
+  font-family:var(--font-serif); font-size:38px; line-height:1.15;
+  margin:0 0 18px;
+}
+@media (max-width:480px){
+  h1.title{ font-size:28px; }
+  .preface{ font-size:17px; }
+  .article-wrap{ padding-top:32px; }
+  .site-header{ padding-top:20px; }
+}
+.preface{
+  font-family:var(--font-serif); font-size:19px; font-style:italic;
+  color:#333; max-width:var(--measure); margin:0 0 26px; line-height:1.55;
+}
+.toc{
+  max-width:var(--measure); border:1px solid var(--border); border-radius:6px;
+  padding:16px 20px; margin:0 0 40px; background:var(--bg-subtle);
+}
+.toc-label{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em;
+  text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;
+}
+.toc ol{ list-style:none; margin:0; padding:0; counter-reset:toc; }
+.toc li{ counter-increment:toc; margin:4px 0; }
+.toc li::before{
+  content:counter(toc, decimal-leading-zero); font-family:var(--font-mono);
+  font-size:12px; color:var(--accent-strong); margin-right:10px;
+}
+.toc a{ text-decoration:none; font-size:15px; }
+.toc a:hover{ text-decoration:underline; }
+
+.article-body{ max-width:var(--measure); font-family:var(--font-serif); font-size:17px; }
+.article-body h2{
+  font-family:var(--font-serif); font-size:24px; margin:40px 0 14px;
+  scroll-margin-top:70px;
+}
+.article-body p{ margin:0 0 16px; }
+.back-to-toc{
+  display:inline-block; font-family:var(--font-mono); font-size:11px;
+  color:var(--text-muted); text-decoration:none; margin:2px 0 26px;
+}
+.back-to-toc:hover{ color:var(--accent-strong); }
+
+/* Sidenotes: float into the margin gutter on wide screens,
+   collapse to an inline callout on narrow ones. Single source
+   of content — no duplication needed. */
+.sidenote{
+  float:right; clear:right;
+  width:var(--note-width);
+  margin-right:calc(-1 * (var(--note-width) + var(--note-gap)));
+  margin-top:2px;
+  font-family:var(--font-sans); font-size:13px; line-height:1.5;
+  color:var(--text-muted);
+  border-left:2px solid var(--accent); padding-left:10px;
+}
+.sidenote .num{ color:var(--accent-strong); font-family:var(--font-mono); }
+sup.ref{ color:var(--accent-strong); font-family:var(--font-mono); font-size:11px; }
+
+@media (max-width: 1099px){
+  .sidenote{
+    float:none; width:auto; margin:14px 0; padding:10px 12px;
+    background:var(--bg-subtle); border-left:3px solid var(--accent);
+  }
+}
+
+pre{
+  background:#1c1f24; color:#d9dde3; border-radius:6px;
+  padding:16px 18px; overflow-x:auto; margin:0 0 20px;
+  border-left:3px solid var(--accent);
+}
+code{ font-family:var(--font-mono); font-size:13px; }
+p code, li code{
+  background:var(--bg-inset); padding:1px 5px; border-radius:3px; font-size:0.85em;
+}
+
+.footnotes{
+  max-width:var(--measure); margin-top:20px; padding-top:20px;
+  border-top:1px solid var(--border);
+  font-family:var(--font-sans); font-size:14px; color:var(--text-muted);
+}
+.footnotes ol{ padding-left:20px; }
+.footnotes li{ margin-bottom:8px; }
+
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+.projects-section{ max-width:900px; margin:0 auto; padding:50px 20px 10px; }
+.projects-section h2{ font-family:var(--font-serif); font-size:26px; margin:0 0 4px; }
+.projects-section .sub{ color:var(--text-muted); margin:0 0 20px; font-size:14px; }
+.projects-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
+.project-card{ border:1px solid var(--border); border-radius:8px; padding:20px 22px; }
+.project-card h3{ font-family:var(--font-serif); font-size:18px; margin:0 0 8px; }
+.project-card p{ font-size:14px; color:#333; margin:0 0 14px; }
+.project-links{ display:flex; gap:16px; font-family:var(--font-mono); font-size:12px; }
+.project-links a{ color:var(--accent-strong); text-decoration:none; }
+.project-links a:hover{ text-decoration:underline; }
+
+/* Reusable pattern for a section with nothing in it yet.
+   Same card shape as populated content, dashed instead of solid,
+   so it reads as "reserved" rather than "broken". */
+.empty-state{
+  border-style:dashed; background:var(--bg-subtle);
+  display:flex; flex-direction:column; justify-content:center;
+}
+.empty-state .eyebrow{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;
+}
+.empty-state p{ color:var(--text-muted); font-style:italic; margin:0; font-size:14px; }
+
+
+.gallery-section{ max-width:900px; margin:0 auto; padding:50px 20px 10px; }
+.gallery-section h2{ font-family:var(--font-serif); font-size:26px; margin:0 0 4px; }
+.gallery-section .sub{ color:var(--text-muted); margin:0 0 20px; font-size:14px; }
+.gallery-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr));
+  gap:12px;
+}
+.gallery-grid figure{ margin:0; }
+.gallery-grid .ph{
+  aspect-ratio:4/3; border-radius:6px;
+  background:linear-gradient(135deg, var(--accent-soft), var(--bg-inset));
+  border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:11px; color:var(--accent-strong);
+}
+.gallery-grid figcaption{
+  font-family:var(--font-mono); font-size:11px; color:var(--text-muted);
+  margin-top:6px;
+}
+
+/* ============================================================
+   RECIPE
+   ============================================================ */
+.recipe-section{ max-width:900px; margin:0 auto; padding:50px 20px 60px; }
+.recipe-card{
+  max-width:var(--measure); border:1px solid var(--border); border-radius:8px;
+  padding:24px 26px; background:var(--bg-subtle);
+}
+.recipe-card h2{ font-family:var(--font-serif); font-size:24px; margin:0 0 4px; }
+.recipe-card .sub{ color:var(--text-muted); font-size:14px; margin:0 0 18px; }
+.recipe-cols{ display:grid; grid-template-columns:1fr 1.6fr; gap:26px; }
+.recipe-cols h4{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--accent-strong); margin:0 0 10px;
+}
+.recipe-cols ul, .recipe-cols ol{ margin:0; padding-left:18px; font-size:14px; }
+.recipe-cols li{ margin-bottom:8px; }
+@media (max-width:600px){ .recipe-cols{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer{
+  max-width:900px; margin:60px auto 0; padding:24px 20px 40px;
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:14px;
+}
+.social{ display:flex; gap:14px; }
+.social a{ color:var(--text-muted); }
+.social a:hover{ color:var(--accent); }
+.social svg{ width:19px; height:19px; }
+.site-footer small{ color:var(--text-muted); font-family:var(--font-mono); font-size:12px; }
+
+/* ============================================================
+   PRINT — nav, footer, prototype bar and thumbnails drop out;
+   sidenotes fall inline; single serif column.
+   ============================================================ */
+@media print{
+  .protobar, .site-header nav, .icon-btn, .site-footer, .print-btn{ display:none !important; }
+  body{ font-size:12pt; }
+  .sidenote{ float:none; width:auto; margin:8px 0; border-left:1px solid #999; background:none; }
+  a{ text-decoration:none; color:#000; }
+  .toc{ border:1px solid #999; background:none; }
+}
+</style>
+</head>
+<body>
+
+<div class="protobar">
+  <strong>eddarmitage.com — design concept</strong>
+  <nav>
+    <a href="#home">Home feed</a>
+    <a href="#article">Article template</a>
+    <a href="#projects">Projects</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#food">Food</a>
+  </nav>
+  <div class="locked">accent: orange (locked)</div>
+</div>
+
+<header class="site-header">
+  <a class="wordmark" href="#">edd armitage<span>.</span></a>
+  <nav>
+    <a href="#">Writing</a>
+    <a href="#projects">Projects</a>
+    <a href="#gallery">Photos</a>
+    <a href="#food">Food</a>
+    <a href="#">About</a>
+    <span class="nav-icons">
+      <a class="icon-btn" href="#" title="GitHub">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+      </a>
+      <a class="icon-btn" href="#" title="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="icon-btn" href="#" title="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="11" x2="8" y2="16"/><line x1="8" y1="8" x2="8" y2="8"/><path d="M12 16v-3a2 2 0 0 1 4 0v3"/></svg>
+      </a>
+      <a class="icon-btn" href="#" title="RSS feed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+      </a>
+    </span>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============================= HOME FEED ============================= -->
+  <section id="home" class="feed">
+
+    <article class="feed-item">
+      <div class="feed-meta"><span class="tag">Article</span> 12 Sep 2026 · 6 min read</div>
+      <h3><a href="#article">Cutting GitHub Actions minutes with self-hosted runners</a></h3>
+      <p>Job gating and caching bought some headroom, but the real fix was moving the heavy jobs onto a Proxmox LXC runner. Here's the before/after and where it still isn't worth it.</p>
+      <a class="more" href="#article">Continue reading →</a>
+    </article>
+
+    <article class="feed-item link-post">
+      <div class="feed-meta"><span class="tag">Link</span> 9 Sep 2026</div>
+      <h3><a href="https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks" target="_blank" rel="noopener">James Shore — Testing Without Mocks</a></h3>
+      <p>A pattern language for sociable, state-based tests without mocking frameworks. The "Nullables" idea — production code with an off switch — is worth sitting with.</p>
+    </article>
+
+    <article class="feed-item">
+      <div class="feed-meta"><span class="tag">Photos</span> 3 Sep 2026</div>
+      <h3><a href="#gallery">New rack, new NUC: a home lab refresh</a></h3>
+      <p>Swapped the old tower for an N150 NUC running Proxmox. Smaller, quieter, and finally sensible about power.</p>
+      <div class="thumb-row">
+        <div class="thumb ph"></div><div class="thumb ph"></div><div class="thumb ph"></div><div class="thumb ph"></div>
+      </div>
+    </article>
+
+    <article class="feed-item">
+      <div class="feed-meta"><span class="tag">Food</span> 30 Aug 2026</div>
+      <h3><a href="#food">Weeknight chana masala</a></h3>
+      <p>The one I actually make on a Tuesday. Thirty minutes, one pan, freezes well.</p>
+    </article>
+
+  </section>
+
+  <!-- ============================= ARTICLE TEMPLATE ============================= -->
+  <section id="article" class="article-wrap">
+    <div class="article-head">
+      <div class="feed-meta">
+        <span class="tag">Article</span> 12 Sep 2026 · 6 min read
+        <button class="print-btn" onclick="window.print()">Print</button>
+      </div>
+      <h1 class="title">Cutting GitHub Actions minutes with self-hosted runners</h1>
+      <p class="preface">Our CI bill crept up quietly over a year until it wasn't quiet anymore. This is what I tried, in order, and what actually moved the needle — job gating, caching, trigger changes, and eventually a self-hosted runner on a Proxmox LXC.</p>
+
+      <div class="toc">
+        <div class="toc-label">Contents</div>
+        <ol>
+          <li><a href="#s1">The problem</a></li>
+          <li><a href="#s2">Cheap wins first</a></li>
+          <li><a href="#s3">Self-hosted runners on Proxmox</a></li>
+          <li><a href="#s4">Was it worth it</a></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="article-body">
+      <h2 id="s1">The problem</h2>
+      <p>Minutes usage had roughly tripled since the previous year, mostly from integration tests running on every push rather than every merge.<sup class="ref">1</sup> Nothing in the pipeline was wrong exactly — it was just running far more often than it needed to.</p>
+      <div class="sidenote"><span class="num">01</span> — This is usually the first thing worth checking before touching infrastructure at all: are you running the expensive job too often, not just too slowly?</div>
+      <p>The obvious first move is gating: only run the full suite on pushes to <code>main</code> or when a PR is marked ready for review, and run a fast subset everywhere else.</p>
+      <a class="back-to-toc" href="#article">↑ Back to contents</a>
+
+      <h2 id="s2">Cheap wins first</h2>
+      <p>Before reaching for self-hosted runners, three changes bought real headroom with no new infrastructure to maintain:</p>
+      <pre><code>on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [ready_for_review]</code></pre>
+      <p>Combined with dependency caching, this cut minutes usage by roughly 40% before any hardware was involved.</p>
+      <div class="sidenote"><span class="num">02</span> — Caching node_modules or the OpenTofu provider cache is often the single biggest win per line of YAML changed.</div>
+      <a class="back-to-toc" href="#article">↑ Back to contents</a>
+
+      <h2 id="s3">Self-hosted runners on Proxmox</h2>
+      <p>For the jobs that were still eating minutes, an LXC container on the existing NUC runs a self-hosted runner that picks up the heavier integration jobs. It's not a fit for every job — anything that needs a clean, disposable environment stays on hosted runners.</p>
+      <a class="back-to-toc" href="#article">↑ Back to contents</a>
+
+      <h2 id="s4">Was it worth it</h2>
+      <p>For this repo, yes — mostly because the hardware already existed. If it meant buying a machine specifically for this, the cheap wins alone would probably have been enough.</p>
+      <a class="back-to-toc" href="#article">↑ Back to contents</a>
+    </div>
+
+    <div class="footnotes">
+      <ol>
+        <li id="fn1">Measured over the trailing 90 days via the Actions usage report in the org billing settings.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================= PROJECTS ============================= -->
+  <section id="projects" class="projects-section">
+    <h2>Projects</h2>
+    <p class="sub">Things I've built and shipped.</p>
+    <div class="projects-grid">
+      <article class="project-card">
+        <h3>Rummikub Score Tracker</h3>
+        <p>A small web app for tracking scores across a game night, built to replace a shared spreadsheet nobody could read mid-game. Cloudflare Workers on the backend.</p>
+        <div class="project-links"><a href="#">View app →</a><a href="#">Source →</a></div>
+      </article>
+      <article class="project-card empty-state">
+        <div class="eyebrow">More soon</div>
+        <p>This is where the next thing lands. Nothing here yet — the slot's ready, that's fine.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================= GALLERY ============================= -->
+  <section id="gallery" class="gallery-section">
+    <h2>Home lab refresh</h2>
+    <p class="sub">Image scaling note: real thumbnails would be served via <code>srcset</code> at 2–3 widths, lazy-loaded below the fold.</p>
+    <div class="gallery-grid">
+      <figure><div class="ph">[image]</div><figcaption>N150 NUC, unboxed</figcaption></figure>
+      <figure><div class="ph">[image]</div><figcaption>Proxmox dashboard</figcaption></figure>
+      <figure><div class="ph">[image]</div><figcaption>Old tower vs. new NUC</figcaption></figure>
+      <figure><div class="ph">[image]</div><figcaption>Cable management, day one</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ============================= RECIPE ============================= -->
+  <section id="food" class="recipe-section">
+    <div class="recipe-card">
+      <h2>Weeknight chana masala</h2>
+      <p class="sub">Serves 3–4 · 30 minutes · one pan</p>
+      <div class="recipe-cols">
+        <div>
+          <h4>Ingredients</h4>
+          <ul>
+            <li>2 tins chickpeas</li>
+            <li>1 onion, diced</li>
+            <li>3 cloves garlic</li>
+            <li>1 tin chopped tomatoes</li>
+            <li>Garam masala, cumin, turmeric</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Method</h4>
+          <ol>
+            <li>Soften onion and garlic in oil, 5 minutes.</li>
+            <li>Add spices, cook 1 minute until fragrant.</li>
+            <li>Add tomatoes and chickpeas, simmer 15 minutes.</li>
+            <li>Mash a few chickpeas to thicken. Season and serve.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="social">
+    <a href="#" title="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a>
+    <a href="#" title="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="11" x2="8" y2="16"/><line x1="8" y1="8" x2="8" y2="8"/><path d="M12 16v-3a2 2 0 0 1 4 0v3"/></svg></a>
+    <a href="#" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></a>
+    <a href="#" title="RSS feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a>
+  </div>
+  <small>© 2026 Edd Armitage · Built with plain HTML · <a href="#">Colophon</a></small>
+</footer>
+
+</body>
+</html>
