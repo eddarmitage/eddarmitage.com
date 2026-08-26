@@ -6,7 +6,7 @@ uglyURLs = true
 disableKinds = ["taxonomy", "term"]
 
 [permalinks]
-  posts = "/:year/:month/:slug"
+  posts = "/:year/:slug"
 
 [outputFormats.RSS]
   mediaType = "application/rss+xml"
