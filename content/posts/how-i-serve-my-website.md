@@ -4,9 +4,6 @@ date: 2025-12-05
 draft: true
 ---
 
-How I Serve My Website
-=====================
-
 This is my first post and outlines how I serve my website. It's a static site, generated using Hugo, and served via Cloudflare.
 
 Hugo
