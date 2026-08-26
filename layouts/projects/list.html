@@ -3,9 +3,11 @@
   <h1>{{ .Title }}</h1>
   <div class="projects-grid">
     {{- range .Pages.ByTitle }}
-    <article class="project-card">
+    <article class="project-card" id="{{ .File.ContentBaseName }}">
       <h2>{{ .Title }}</h2>
-      <p>{{ with .Params.summary }}{{ . }}{{ else }}{{ .Summary | plainify }}{{ end }}</p>
+      <div class="project-card-body">
+        {{ .Content }}
+      </div>
       {{- with .Params.links }}
       <div class="project-links">
         {{- range . }}
