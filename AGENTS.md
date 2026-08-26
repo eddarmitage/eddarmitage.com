@@ -51,11 +51,15 @@ The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
 ## URL structure — do not change without checking backward-compat
 
 `hugo.toml` sets `uglyURLs = true` plus a custom `posts` permalink
-specifically to reproduce the exact URLs the old Jekyll site served
-(`/about`, `/archive`, `/YYYY/MM/slug`, no trailing slash) once Cloudflare
-Pages strips the `.html` extension at the edge. Changing permalink structure
-or `uglyURLs` will break existing indexed/bookmarked URLs — treat this as a
-deliberate constraint, not an oversight.
+(`/YYYY/slug`, no trailing slash) once Cloudflare Pages strips the `.html`
+extension at the edge. This originally reproduced the old Jekyll site's
+`/YYYY/MM/slug` scheme exactly; that month segment was deliberately dropped
+in #36, with 301s in `static/_redirects` covering every post that was
+already published under the old scheme so existing indexed/bookmarked links
+keep working. Changing permalink structure or `uglyURLs` again will break
+current indexed/bookmarked URLs — treat this as a deliberate constraint, not
+an oversight, and add a corresponding `static/_redirects` entry for any
+already-published URL a future change would move.
 
 RSS is intentionally served at `/feed.xml` (via an `outputFormats.RSS`
 override in `hugo.toml`), matching the feed URL that was actually live under

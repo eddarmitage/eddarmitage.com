@@ -1,0 +1,7 @@
+# Posts moved from /:year/:month/:slug to /:year/:slug (see AGENTS.md "URL
+# structure" and issue #36). One line per existing published post — add a
+# line here whenever an old-scheme URL needs to keep working, rather than
+# relying on a pattern rule, since a flat /:year/*/:slug -> /:year/:slug
+# rewrite would only be safe if no two months in the same year ever share a
+# slug.
+/2023/06/hosting-a-static-site /2023/hosting-a-static-site 301
