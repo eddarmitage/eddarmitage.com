@@ -219,7 +219,8 @@ pre.chroma{ margin:0; }
 .projects-section h1{ font-family:var(--font-serif); font-size:26px; margin:0 0 4px; }
 .projects-section .sub{ color:var(--text-muted); margin:0 0 20px; font-size:14px; }
 .projects-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
-.project-card{ border:1px solid var(--border); border-radius:8px; padding:20px 22px; }
+.project-card{ border:1px solid var(--border); border-radius:8px; padding:20px 22px; scroll-margin-top:20px; }
+.project-card:target{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
 .project-card h2{ font-family:var(--font-serif); font-size:18px; margin:0 0 8px; }
 .project-card p{ font-size:14px; color:#333; margin:0 0 14px; }
 .project-links{ display:flex; gap:16px; font-family:var(--font-mono); font-size:12px; }
