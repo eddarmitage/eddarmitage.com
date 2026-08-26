@@ -56,8 +56,8 @@ disableKinds = ["taxonomy", "term"]
     url = "https://www.linkedin.com/in/eddarmitage"
 
 [[menu.main]]
-  identifier = "writing"
-  name = "Writing"
+  identifier = "posts"
+  name = "Posts"
   url = "/posts/"
   weight = 10
 
@@ -73,11 +73,11 @@ disableKinds = ["taxonomy", "term"]
   url = "/photos/"
   weight = 30
 
-[[menu.main]]
-  identifier = "food"
-  name = "Food"
-  url = "/food/"
-  weight = 40
+# [[menu.main]]
+#   identifier = "food"
+#   name = "Food"
+#   url = "/food/"
+#   weight = 40
 
 [[menu.main]]
   identifier = "about"

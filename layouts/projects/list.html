@@ -1,7 +1,6 @@
 {{- define "main" }}
 <section class="projects-section">
   <h1>{{ .Title }}</h1>
-  <p class="sub">{{ with .Params.description }}{{ . }}{{ else }}Things I've built and shipped.{{ end }}</p>
   <div class="projects-grid">
     {{- range .Pages.ByTitle }}
     <article class="project-card">
@@ -18,7 +17,7 @@
     {{- end }}
     <article class="project-card empty-state">
       <div class="eyebrow">More soon</div>
-      <p>This is where the next thing lands. Nothing here yet &mdash; the slot's ready, that's fine.</p>
+      <p>Future thinge I make and do will appear here.</p>
     </article>
   </div>
 </section>
