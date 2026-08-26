@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.165.0"
+          extended: true
+
+      - name: Build site
+        run: ./scripts/build.sh
+        env:
+          CF_PAGES_BRANCH: main
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public
+          path: public
+          retention-days: 1
+
+  markdown-lint:
+    name: Markdown lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: "content/**/*.md"
+
+  link-check:
+    name: Link check
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: public
+          path: public
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --offline
+            --base-url ${{ github.workspace }}/public
+            --remap "https://eddarmitage.com/ file://${{ github.workspace }}/public/"
+            --fallback-extensions html
+            ./public
+          fail: true
+
+  image-size-check:
+    name: Image size check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check image sizes
+        run: ./scripts/check-image-sizes.sh
