@@ -1,0 +1,8 @@
+# Per-page QR codes (see "QR codes" in AGENTS.md) are published as
+# extension-less `qr` files, matching this site's own uglyURLs scheme, so
+# Cloudflare Pages can't infer their Content-Type from an extension.
+/qr
+  Content-Type: image/png
+
+/*/qr
+  Content-Type: image/png

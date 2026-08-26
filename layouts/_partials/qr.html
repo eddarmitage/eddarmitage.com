@@ -1,5 +1,5 @@
 {{- /*
-Generates this page's own /qr.png (see "QR codes" in AGENTS.md): a QR code
+Generates this page's own /qr (see "QR codes" in AGENTS.md): a QR code
 encoding the page's canonical URL, with the site favicon composited at the
 centre. Skipped for the 404 page, which has no canonical URL of its own.
 Called once per page from baseof.html; its output is discarded, the only
@@ -8,7 +8,9 @@ effect is publishing the generated image resource.
 .Permalink/.RelPermalink carry the literal ".html" uglyURLs produces (see
 "URL structure" in AGENTS.md) — Cloudflare Pages strips that at the edge,
 so it's stripped back off here too, both for the encoded URL and for the
-output path, to match what's actually served.
+output path, to match what's actually served. The output file has no
+extension, matching the page's own URL scheme — static/_headers sets its
+Content-Type since Cloudflare can't infer it from an extension.
 */ -}}
 {{- if ne .Kind "404" }}
   {{- $permalink := .Permalink }}
@@ -20,7 +22,7 @@ output path, to match what's actually served.
     {{- $dir = printf "%s/" (strings.TrimSuffix ".html" $dir) }}
     {{- $permalink = strings.TrimSuffix ".html" $permalink }}
   {{- end }}
-  {{- $target := strings.TrimPrefix "/" (printf "%sqr.png" $dir) }}
+  {{- $target := strings.TrimPrefix "/" (printf "%sqr" $dir) }}
 
   {{- $qr := images.QR $permalink (dict "level" "high" "scale" 8) }}
   {{- $logo := resources.Get "images/qr-logo.png" }}

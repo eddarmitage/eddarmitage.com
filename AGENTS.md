@@ -70,8 +70,9 @@ in Safari (desktop and iOS), not just Chromium browsers.
 
 ## QR codes
 
-Every published page gets a `qr.png` alongside it (e.g. `/about/qr.png`,
-`/food/qr.png`, the home page's at `/qr.png`) encoding that page's own
+Every published page gets a `qr` alongside it (e.g. `/about/qr`, `/food/qr`,
+the home page's at `/qr`) — an extension-less file, matching this site's own
+uglyURLs scheme, returning a PNG QR code that encodes that page's own
 canonical URL. Generated entirely at build time using Hugo's built-in
 `images.QR`/`images.Overlay` (Hugo ≥0.123) — no external script, package
 manager, or Cloudflare Pages Function needed, so the site stays pure Hugo.
@@ -83,22 +84,26 @@ manager, or Cloudflare Pages Function needed, so the site stays pure Hugo.
 - `.Permalink`/`.RelPermalink` carry the literal `.html` uglyURLs produces
   (Hugo itself doesn't hide it — Cloudflare Pages strips it at the edge, see
   "URL structure" above), so the partial strips `.html`/`index.html` back
-  off both the encoded URL and the output path before appending `qr.png` —
-  landing each page's code alongside its own output (`public/about/qr.png`,
-  `public/food/qr.png`) without overwriting anything already there, and
+  off both the encoded URL and the output path before appending `qr` —
+  landing each page's code alongside its own output (`public/about/qr`,
+  `public/food/qr`) without overwriting anything already there, and
   encoding the clean URL actually served rather than the `.html` one. This
   also means the encoded URL automatically reflects the `-b`/baseURL
   override `scripts/build.sh` applies for preview deployments. Drafts are
   excluded the same way the rest of the build excludes them — the partial
   only ever runs for pages Hugo is actually rendering.
+- Because the output file has no extension, Cloudflare Pages can't infer its
+  Content-Type — `static/_headers` sets `Content-Type: image/png` for `/qr`
+  and, via a greedy `/*/qr` splat (Cloudflare's `_headers` wildcard matches
+  across path segments/slashes), every nested `<path>/qr`.
 - Uses error-correction level `high` (~30% redundancy) with
   `assets/images/qr-logo.png` — a copy of
   `static/assets/android-chrome-192x192.png`, duplicated because
   `resources.Get`/`images.Overlay` can only reach files under `assets/`, not
   `static/` — composited at the centre at ~20% of the code's width, which
   stays comfortably inside the level-H budget. If the favicon is ever
-  regenerated, update this copy too. Verified scannable with a real decoder
-  (`jsQR`), not just visually.
+  regenerated, update this copy too (see #21). Verified scannable with a
+  real decoder (`jsQR`), not just visually.
 
 ## Build & dev
 
