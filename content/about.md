@@ -5,7 +5,9 @@ hiddenInRss: true
 
 {{< avatar src="/img/about/edd.jpg" alt="Edd Armitage-King" >}}
 
-I'm Edd Armitage-King, a Software Engineer based in London, UK. My jobby-job involves working on a Java planning and control system for large, automated, grocery warehouses.
+I'm Edd Armitage-King, a Software Engineer now based in London, UK.
+Originally from the midlands, I'm a Computer Science graduate from the University of Bath.
+My jobby-job involves working on a Java planning and control system for large, automated, grocery warehouses:
 
 {{< youtube ssZ_8cqfBlE >}}
 
