@@ -62,7 +62,11 @@ img{ max-width:100%; display:block; }
   color:var(--text-muted);
 }
 .site-header nav a:hover{ color:var(--text); }
-.site-header nav a[aria-current="page"]{ color:var(--accent-strong); font-weight:600; }
+.site-header nav a[aria-current="page"]{
+  color:var(--accent-strong); font-weight:600;
+  background:var(--accent-soft); border-radius:4px;
+  padding:3px 8px; margin:-3px -8px;
+}
 .nav-icons{ display:flex; align-items:center; gap:14px; margin-left:auto; }
 .icon-btn{ display:inline-flex; color:var(--text-muted); }
 .icon-btn:hover{ color:var(--accent); }
