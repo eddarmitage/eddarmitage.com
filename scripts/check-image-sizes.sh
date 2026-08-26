@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Fails if any image under content/ or static/ exceeds MAX_DIMENSION pixels
 # on its longest edge - a guardrail against accidentally committing
-# full-size source photos into the repo. Requires ImageMagick's `identify`
-# (preinstalled on GitHub-hosted ubuntu-latest runners).
+# full-size source photos into the repo. Requires ImageMagick's `identify`.
 set -euo pipefail
 
 MAX_DIMENSION=2000
