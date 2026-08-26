@@ -1,7 +1,6 @@
 ---
 title: "Rummikub Scorecard"
 date: 2026-08-26
-summary: "A web-based app, hosted entirely on Cloudflare, to score games of Rummikub based on the tiles each player has remaining."
 links:
   - label: "GitHub"
     url: "https://github.com/eddarmitage/Rummikub"
