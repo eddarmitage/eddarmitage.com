@@ -1,0 +1,14 @@
+{
+  // Front matter here is YAML (---), which markdownlint-cli2 recognises by
+  // default - see AGENTS.md.
+  "config": {
+    "default": true,
+    // Prose content isn't wrapped to a fixed line length.
+    "MD013": false,
+    // Posts don't open with a top-level heading - the title comes from
+    // front matter instead.
+    "MD041": false,
+    // Shortcode/HTML snippets are occasionally embedded directly in content.
+    "MD033": false
+  }
+}
