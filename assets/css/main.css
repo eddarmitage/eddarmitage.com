@@ -302,13 +302,13 @@ pre.chroma{ margin:0; }
    ============================================================ */
 .avatar-photo{
   float:right;
-  width:130px; height:130px;
-  margin:-14px 0 12px 24px;
+  width:150px; height:150px;
+  margin:0 0 16px 24px;
   border-radius:50%;
   object-fit:cover;
   shape-outside:circle(50%);
 }
-.avatar-photo + p + *{ clear:both; }
+.avatar-photo + p + *{ clear:both; margin-bottom:32px; }
 
 /* ============================================================
    404
