@@ -1,0 +1,34 @@
+{{- /*
+Generates this page's own /qr.png (see "QR codes" in AGENTS.md): a QR code
+encoding the page's canonical URL, with the site favicon composited at the
+centre. Skipped for the 404 page, which has no canonical URL of its own.
+Called once per page from baseof.html; its output is discarded, the only
+effect is publishing the generated image resource.
+
+.Permalink/.RelPermalink carry the literal ".html" uglyURLs produces (see
+"URL structure" in AGENTS.md) — Cloudflare Pages strips that at the edge,
+so it's stripped back off here too, both for the encoded URL and for the
+output path, to match what's actually served.
+*/ -}}
+{{- if ne .Kind "404" }}
+  {{- $permalink := .Permalink }}
+  {{- $dir := .RelPermalink }}
+  {{- if strings.HasSuffix $dir "/index.html" }}
+    {{- $dir = strings.TrimSuffix "index.html" $dir }}
+    {{- $permalink = strings.TrimSuffix "index.html" $permalink }}
+  {{- else if strings.HasSuffix $dir ".html" }}
+    {{- $dir = printf "%s/" (strings.TrimSuffix ".html" $dir) }}
+    {{- $permalink = strings.TrimSuffix ".html" $permalink }}
+  {{- end }}
+  {{- $target := strings.TrimPrefix "/" (printf "%sqr.png" $dir) }}
+
+  {{- $qr := images.QR $permalink (dict "level" "high" "scale" 8) }}
+  {{- $logo := resources.Get "images/qr-logo.png" }}
+  {{- $logoSize := printf "%dx%d" (mul $qr.Width 0.2 | int) (mul $qr.Height 0.2 | int) }}
+  {{- $logo = $logo.Resize $logoSize }}
+  {{- $x := div (sub $qr.Width $logo.Width) 2 }}
+  {{- $y := div (sub $qr.Height $logo.Height) 2 }}
+  {{- $composited := $qr.Filter (images.Overlay $logo $x $y) }}
+  {{- $final := resources.Copy $target $composited }}
+  {{- $_ := $final.RelPermalink }}
+{{- end -}}
