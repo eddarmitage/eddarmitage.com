@@ -298,6 +298,19 @@ pre.chroma{ margin:0; }
 .page-section .project-links{ margin:0 0 24px; }
 
 /* ============================================================
+   Photos
+   ============================================================ */
+.avatar-photo{
+  float:right;
+  width:150px; height:150px;
+  margin:0 0 16px 24px;
+  border-radius:50%;
+  object-fit:cover;
+  shape-outside:circle(50%);
+}
+.avatar-photo + p + *{ clear:both; margin-bottom:32px; }
+
+/* ============================================================
    404
    ============================================================ */
 .not-found{
