@@ -18,7 +18,7 @@
     <a href="{{ $href }}">{{ .Title }}</a>
     {{- end }}
   </h3>
-  <p>{{ with .Params.description }}{{ . }}{{ else }}{{ .Summary | plainify }}{{ end }}</p>
+  <div class="summary">{{ with .Params.description }}<p>{{ . }}</p>{{ else }}{{ .Summary }}{{ end }}</div>
   {{- if eq $tag "Article" }}
   <a class="more" href="{{ .Permalink }}">Continue reading &rarr;</a>
   {{- end }}
