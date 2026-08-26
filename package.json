@@ -1,0 +1,13 @@
+{
+  "name": "eddarmitage.com",
+  "private": true,
+  "description": "Hugo static site for eddarmitage.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eddarmitage/eddarmitage.com.git"
+  },
+  "dependencies": {
+    "jimp": "^1.6.1",
+    "qrcode": "^1.5.4"
+  }
+}
