@@ -1,8 +1,10 @@
 <header class="site-header">
   <a class="wordmark" href="{{ "/" | relURL }}">edd armitage-king<span>.</span></a>
   <nav>
+    {{- $rel := $.RelPermalink | strings.TrimSuffix "index.html" | strings.TrimSuffix ".html" }}
     {{- range site.Menus.main }}
-    <a href="{{ .URL }}" {{ if $.IsMenuCurrent "main" . }}aria-current="page"{{ end }}>{{ .Name }}</a>
+    {{- $isCurrent := or (eq $rel .URL) (and $.IsHome (eq .Identifier "writing")) }}
+    <a href="{{ .URL }}" {{ if $isCurrent }}aria-current="page"{{ end }}>{{ .Name }}</a>
     {{- end }}
     <span class="nav-icons">
       {{- partial "social-icons.html" (dict "class" "icon-btn") }}
