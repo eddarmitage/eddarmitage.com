@@ -1,5 +1,9 @@
+{{- $assets := partial "current-icon-assets.html" . }}
 <header class="site-header">
-  <a class="wordmark" href="{{ "/" | relURL }}">edd armitage-king<span>.</span></a>
+  <a class="wordmark" href="{{ "/" | relURL }}">
+    <img class="wordmark-icon" src="{{ $assets.logo | absURL }}" alt="" width="28" height="28">
+    edd armitage-king<span>.</span>
+  </a>
   <nav>
     {{- $rel := $.RelPermalink | strings.TrimSuffix "index.html" | strings.TrimSuffix ".html" }}
     {{- range site.Menus.main }}

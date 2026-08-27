@@ -10,10 +10,7 @@
 {{- $style := resources.Get "css/main.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
 
-{{- $assets := site.Params.assets }}
-{{- if eq site.Params.faviconEnv "dev" }}
-  {{- $assets = site.Params.assetsDev }}
-{{- end }}
+{{- $assets := partial "current-icon-assets.html" . }}
 <link rel="icon" href="{{ $assets.favicon | absURL }}">
 <link rel="icon" type="image/svg+xml" href="{{ $assets.faviconSvg | absURL }}">
 <link rel="icon" type="image/png" sizes="16x16" href="{{ $assets.favicon16x16 | absURL }}">

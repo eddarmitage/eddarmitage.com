@@ -47,6 +47,7 @@ disableKinds = ["taxonomy", "term"]
     favicon48x48 = "assets/favicon-48x48.png"
     appleTouchIcon = "assets/apple-touch-icon.png"
     webmanifest = "assets/site.webmanifest"
+    logo = "assets/android-chrome-512x512.png"
     theme_color = "#f19e54"
 
   [params.assetsDev]
@@ -57,6 +58,7 @@ disableKinds = ["taxonomy", "term"]
     favicon48x48 = "assets/favicon-48x48-dev.png"
     appleTouchIcon = "assets/apple-touch-icon-dev.png"
     webmanifest = "assets/site-dev.webmanifest"
+    logo = "assets/android-chrome-512x512-dev.png"
     theme_color = "#9b4f96"
 
   [[params.socialIcons]]
