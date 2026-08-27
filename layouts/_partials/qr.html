@@ -1,9 +1,11 @@
 {{- /*
 Generates this page's own /qr (see "QR codes" in AGENTS.md): a QR code
 encoding the page's canonical URL, with the site favicon composited at the
-centre. Skipped for the 404 page, which has no canonical URL of its own.
-Called once per page from baseof.html; its output is discarded, the only
-effect is publishing the generated image resource.
+centre. A masking pass first clears a padded square behind the logo so it
+sits on a clean background rather than directly against QR modules. Skipped
+for the 404 page, which has no canonical URL of its own. Called once per
+page from baseof.html; its output is discarded, the only effect is
+publishing the generated image resource.
 
 .Permalink/.RelPermalink carry the literal ".html" uglyURLs produces (see
 "URL structure" in AGENTS.md) — Cloudflare Pages strips that at the edge,
@@ -26,11 +28,24 @@ Content-Type since Cloudflare can't infer it from an extension.
 
   {{- $qr := images.QR $permalink (dict "level" "high" "scale" 8) }}
   {{- $logo := resources.Get "images/qr-logo.png" }}
+  {{- $mask := resources.Get "images/qr-logo-mask.png" }}
   {{- $logoSize := printf "%dx%d" (mul $qr.Width 0.2 | int) (mul $qr.Height 0.2 | int) }}
   {{- $logo = $logo.Resize $logoSize }}
   {{- $x := div (sub $qr.Width $logo.Width) 2 }}
   {{- $y := div (sub $qr.Height $logo.Height) 2 }}
-  {{- $composited := $qr.Filter (images.Overlay $logo $x $y) }}
+  {{- /*
+  images.QR renders a greyscale-only image, and Hugo's Overlay/Mask filters
+  draw directly into the base image's existing colour model rather than
+  promoting it — compositing the colour logo straight onto $qr would silently
+  flatten it to greyscale. Drawing the QR onto a transparent RGBA canvas
+  first (at its native size, so no resampling/blur) gives the later filters
+  an RGBA base that can actually hold colour.
+  */ -}}
+  {{- $canvas := resources.Get "images/qr-canvas.png" }}
+  {{- $canvasSize := printf "%dx%d" $qr.Width $qr.Height }}
+  {{- $canvas = $canvas.Resize $canvasSize }}
+  {{- $filters := slice (images.Overlay $qr 0 0) (images.Mask $mask) (images.Overlay $logo $x $y) }}
+  {{- $composited := $canvas.Filter $filters }}
   {{- $final := resources.Copy $target $composited }}
   {{- $_ := $final.RelPermalink }}
 {{- end -}}

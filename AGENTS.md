@@ -116,7 +116,21 @@ manager, or Cloudflare Pages Function needed, so the site stays pure Hugo.
   `static/` — composited at the centre at ~20% of the code's width, which
   stays comfortably inside the level-H budget. If the favicon is ever
   regenerated, update this copy too (see #21). Verified scannable with a
-  real decoder (`jsQR`), not just visually.
+  real decoder (`jsQR`/`zbarimg`), not just visually.
+- Before the logo goes on, `images.Mask` (with `assets/images/qr-logo-mask.png`
+  — a white square with a black square ~26% of the width punched in the
+  centre) clears a small padded area behind it first, so the logo sits on a
+  clean background instead of directly against jagged QR modules.
+- `images.QR` renders a greyscale-only image, and Hugo's `images.Mask`/
+  `images.Overlay` filters draw into the base image's existing colour model
+  rather than promoting it — applying them straight to the QR resource would
+  silently flatten the (colour) logo to greyscale on encode. To avoid that,
+  the QR is first drawn via `images.Overlay` onto a transparent RGBA canvas
+  (`assets/images/qr-canvas.png`, a 1×1 transparent pixel resized up to the
+  QR's own dimensions — cheap and lossless since every pixel is identical)
+  at its native size, so no resampling/blur is introduced; only then are the
+  mask and logo filters applied, against an RGBA base that can actually hold
+  colour.
 
 ## Build & dev
 
