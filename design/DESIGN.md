@@ -14,9 +14,9 @@ Orange, decided. No runtime theme switcher — bake these in as static values,
 don't ship a color picker.
 
 ```css
---accent: #E8541F;
---accent-soft: #FBEAE2;
---accent-strong: #B23E14;
+--accent: #B5651F;
+--accent-soft: #FBEEE2;
+--accent-strong: #8B4B14;
 ```
 
 ## Color tokens

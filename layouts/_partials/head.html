@@ -10,16 +10,16 @@
 {{- $style := resources.Get "css/main.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
 
-<link rel="icon" href="{{ site.Params.assets.favicon | absURL }}">
-<link rel="icon" type="image/png" sizes="16x16" href="{{ site.Params.assets.favicon16x16 | absURL }}">
-<link rel="icon" type="image/png" sizes="32x32" href="{{ site.Params.assets.favicon32x32 | absURL }}">
-<link rel="apple-touch-icon" href="{{ site.Params.assets.apple_touch_icon | absURL }}">
-<link rel="mask-icon" href="{{ site.Params.assets.safari_pinned_tab | absURL }}" color="{{ site.Params.assets.theme_color }}">
-<meta name="theme-color" content="{{ site.Params.assets.theme_color }}">
-<meta name="msapplication-TileColor" content="{{ site.Params.assets.msapplication_TileColor }}">
+{{- $assets := partial "current-icon-assets.html" . }}
+<link rel="icon" href="{{ $assets.favicon | absURL }}">
+<link rel="icon" type="image/svg+xml" href="{{ $assets.faviconSvg | absURL }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ $assets.favicon16x16 | absURL }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ $assets.favicon32x32 | absURL }}">
+<link rel="icon" type="image/png" sizes="48x48" href="{{ $assets.favicon48x48 | absURL }}">
+<link rel="apple-touch-icon" href="{{ $assets.appleTouchIcon | absURL }}">
+<link rel="manifest" href="{{ $assets.webmanifest | absURL }}">
+<meta name="theme-color" content="{{ $assets.theme_color }}">
 
 {{- range .AlternativeOutputFormats }}
 <link rel="{{ .Rel }}" type="{{ .MediaType.Type | html }}" href="{{ .Permalink | safeURL }}" title="{{ site.Title }}">
 {{- end }}
-
-{{- partial "extend_head.html" . }}

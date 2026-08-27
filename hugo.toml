@@ -34,14 +34,32 @@ disableKinds = ["taxonomy", "term"]
   author = "Edd Armitage-King"
   mainSections = ["posts", "photos", "food"]
 
+  # Overridden to "dev" for preview deployments via the HUGO_PARAMS_FAVICONENV
+  # env var set in scripts/build.sh, so preview tabs are visually
+  # distinguishable from production. See params.assetsDev below.
+  faviconEnv = "prod"
+
   [params.assets]
     favicon = "assets/favicon.ico"
+    faviconSvg = "assets/favicon.svg"
     favicon16x16 = "assets/favicon-16x16.png"
     favicon32x32 = "assets/favicon-32x32.png"
-    apple_touch_icon = "assets/apple-touch-icon.png"
-    safari_pinned_tab = "assets/safari-pinned-tab.svg"
-    theme_color = "#ffffff"
-    msapplication_TileColor = "#da532c"
+    favicon48x48 = "assets/favicon-48x48.png"
+    appleTouchIcon = "assets/apple-touch-icon.png"
+    webmanifest = "assets/site.webmanifest"
+    logo = "assets/android-chrome-512x512.png"
+    theme_color = "#f19e54"
+
+  [params.assetsDev]
+    favicon = "assets/favicon-dev.ico"
+    faviconSvg = "assets/favicon-dev.svg"
+    favicon16x16 = "assets/favicon-16x16-dev.png"
+    favicon32x32 = "assets/favicon-32x32-dev.png"
+    favicon48x48 = "assets/favicon-48x48-dev.png"
+    appleTouchIcon = "assets/apple-touch-icon-dev.png"
+    webmanifest = "assets/site-dev.webmanifest"
+    logo = "assets/android-chrome-512x512-dev.png"
+    theme_color = "#9b4f96"
 
   [[params.socialIcons]]
     name = "github"

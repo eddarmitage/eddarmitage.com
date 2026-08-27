@@ -1,0 +1,5 @@
+{{- $assets := site.Params.assets }}
+{{- if eq site.Params.faviconEnv "dev" }}
+  {{- $assets = site.Params.assetsDev }}
+{{- end }}
+{{- return $assets }}
