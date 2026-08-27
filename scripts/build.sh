@@ -9,5 +9,8 @@ set -euo pipefail
 if [ "${CF_PAGES_BRANCH:-}" = "main" ]; then
   hugo --gc --minify
 else
+  # Use the -dev favicon/manifest set (see hugo.toml params.assetsDev) so
+  # preview tabs are visually distinguishable from production.
+  export HUGO_PARAMS_FAVICONENV="dev"
   hugo --gc --minify -b "${CF_PAGES_URL}"
 fi

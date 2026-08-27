@@ -67,10 +67,19 @@ Jekyll — not Hugo's default `/index.xml`.
 
 ## Favicons
 
-The favicon/manifest `<head>` block (`layouts/_partials/extend_head.html` +
-`params.assets.*` in `hugo.toml`) has a documented history of Safari-specific
+The favicon/manifest `<head>` block (`layouts/_partials/head.html` +
+`params.assets*` in `hugo.toml`) has a documented history of Safari-specific
 breakage in the old Jekyll site (6+ bug-fix commits). Test any change to this
 in Safari (desktop and iOS), not just Chromium browsers.
+
+There are two full icon/manifest sets in `hugo.toml`: `params.assets` (prod,
+orange) and `params.assetsDev` (preview builds, purple) — `head.html` picks
+between them based on `params.faviconEnv`, which defaults to `"prod"` but is
+overridden to `"dev"` by `HUGO_PARAMS_FAVICONENV` (set in `scripts/build.sh`
+for any branch other than `main`, via Hugo's built-in `HUGO_`-prefixed env
+var config binding). This makes preview deployment tabs visually
+distinguishable from production. `hugo server -D` still runs as `"prod"`
+unless that env var is set locally.
 
 ## QR codes
 
