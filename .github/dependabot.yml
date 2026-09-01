@@ -1,0 +1,23 @@
+version: 2
+
+# GitHub Actions is the only dependency ecosystem in this repo — the site is
+# pure Hugo (no package manager, no theme submodule), so the action versions
+# pinned in .github/workflows/ci.yml are the only thing to keep current.
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    # One PR for the lot: these are all CI-only bumps, and CI runs the full
+    # build/lint/link-check on it anyway, so reviewing them together is cheaper
+    # than four near-identical PRs a week.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
