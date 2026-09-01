@@ -169,9 +169,20 @@ h1.title{
 }
 .back-to-toc:hover{ color:var(--accent-strong); }
 
-/* Sidenotes: float into the margin gutter on wide screens,
-   collapse to an inline callout on narrow ones. Single source
-   of content — no duplication needed. */
+/* ---- Notes -------------------------------------------------
+   Two deliberate patterns, sharing one visual language:
+
+   1. Sidenotes ({{< ref >}} + {{< sidenote >}}) — short marginal
+      asides. Float into the right gutter on wide screens, collapse
+      to an inline callout on narrow ones. Single source of content,
+      no duplication; marker and note link to each other.
+   2. Footnotes (goldmark `[^1]`) — long, multi-paragraph or
+      citation-style notes, collected at the end of the article.
+
+   Markers: sidenotes use the site's decimal-leading-zero numbering
+   (as the TOC does); goldmark owns its own numerals, so footnotes
+   stay plain decimal and match in font and colour instead.
+   ------------------------------------------------------------ */
 .sidenote{
   float:right; clear:right;
   width:var(--note-width);
@@ -180,15 +191,35 @@ h1.title{
   font-family:var(--font-sans); font-size:13px; line-height:1.5;
   color:var(--text-muted);
   border-left:2px solid var(--accent); padding-left:10px;
+  scroll-margin-top:24px;
 }
-.sidenote .num{ color:var(--accent-strong); font-family:var(--font-mono); }
-sup.ref{ color:var(--accent-strong); font-family:var(--font-mono); font-size:11px; }
+.sidenote .num{
+  color:var(--accent-strong); font-family:var(--font-mono);
+  text-decoration:none;
+}
+.sidenote .num:hover{ text-decoration:underline; }
+sup.ref{
+  font-family:var(--font-mono); font-size:11px;
+  line-height:0; vertical-align:super;
+  scroll-margin-top:24px;
+}
+sup.ref a{
+  color:var(--accent-strong); text-decoration:none;
+  padding:0 1px;
+}
+sup.ref a:hover{ text-decoration:underline; }
+
+/* Jumping to a note (or back to its marker) should make the target
+   obvious — it matters most on narrow screens, where the note is a
+   scroll away rather than sitting alongside. */
+.sidenote:target, sup.ref:target a{ background:var(--accent-soft); }
 
 @media (max-width: 1099px){
   .sidenote{
     float:none; width:auto; margin:14px 0; padding:10px 12px;
     background:var(--bg-subtle); border-left:3px solid var(--accent);
   }
+  .sidenote:target{ background:var(--accent-soft); }
 }
 
 pre{
@@ -205,14 +236,57 @@ p code, li code{
 .highlight{ margin:0 0 20px; }
 pre.chroma{ margin:0; }
 
+/* Goldmark emits .footnotes inside .article-body, after the prose —
+   clear any sidenote still floating in the gutter so the two never
+   collide at the foot of a short article. */
 .footnotes{
-  max-width:var(--measure); margin-top:20px; padding-top:20px;
+  clear:both;
+  max-width:var(--measure); margin-top:36px; padding-top:20px;
   border-top:1px solid var(--border);
   font-family:var(--font-sans); font-size:14px; color:var(--text-muted);
 }
-.footnotes ol{ padding-left:20px; }
-.footnotes li{ margin-bottom:8px; }
 .footnotes hr{ display:none; }
+/* Labelled like the TOC, so the block announces itself rather than
+   appearing as an unexplained rule and list. */
+.footnotes::before{
+  content:"Notes";
+  display:block;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em;
+  text-transform:uppercase; color:var(--text-muted); margin-bottom:12px;
+}
+.footnotes ol{ list-style:none; margin:0; padding:0; counter-reset:fn; }
+.footnotes li{
+  counter-increment:fn;
+  position:relative; padding-left:32px; margin-bottom:12px;
+  scroll-margin-top:24px;
+}
+.footnotes li::before{
+  content:counter(fn);
+  position:absolute; left:0; top:0;
+  font-family:var(--font-mono); font-size:12px; color:var(--accent-strong);
+  /* Match the 14px/1.5 line box of the note text so the number sits on
+     the same baseline as its first line rather than riding above it. */
+  line-height:21px;
+}
+.footnotes li:target{ background:var(--accent-soft); }
+.footnotes p{ margin:0 0 8px; }
+.footnotes li > p:last-child{ margin-bottom:0; }
+
+.footnote-ref{
+  font-family:var(--font-mono); font-size:11px;
+  line-height:0; vertical-align:super;
+  color:var(--accent-strong); text-decoration:none;
+  padding:0 1px;
+}
+.footnote-ref:hover{ text-decoration:underline; }
+sup[id^="fnref"]{ scroll-margin-top:24px; }
+sup[id^="fnref"]:target .footnote-ref{ background:var(--accent-soft); }
+.footnote-backref{
+  color:var(--accent-strong); text-decoration:none;
+  /* The bare ↩︎ glyph is a small tap target on touch. */
+  padding:0 4px;
+}
+.footnote-backref:hover{ text-decoration:underline; }
 
 /* ============================================================
    PROJECTS
@@ -348,4 +422,11 @@ pre.chroma{ margin:0; }
   .sidenote{ float:none; width:auto; margin:8px 0; border-left:1px solid #999; background:none; }
   a{ text-decoration:none; color:#000; }
   .toc{ border:1px solid #999; background:none; }
+  /* Backrefs are navigation, not content — nothing to click on paper.
+     Target highlights would print as grey blocks, so drop those too. */
+  .footnote-backref{ display:none; }
+  .sidenote:target, .footnotes li:target,
+  sup.ref:target a, sup[id^="fnref"]:target .footnote-ref{ background:none; }
+  .footnotes{ border-top:1px solid #999; }
+  .footnotes li::before, .footnote-ref, sup.ref a, .sidenote .num{ color:#000; }
 }
