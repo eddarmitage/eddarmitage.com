@@ -4,6 +4,33 @@ Hugo static site for eddarmitage.com, hosted on Cloudflare Pages. Migrated from
 Jekyll+GitHub Pages in 2026 (see PR #4 and git history for the full migration
 rationale).
 
+## The prose is the author's — agents do not write it
+
+The words under `content/` are Edd's writing. **Agents must not draft,
+rewrite, extend, condense, restructure or otherwise "improve" the body of a
+post, project write-up, photo caption or recipe** — not as a first draft, not
+as a suggested paragraph slipped in silently, and not as a tidy-up on the way
+past while doing something else.
+
+What an agent *may* change in a content file:
+
+- **Front matter.** `title`, `date`, `draft`, `tags`, `summary`,
+  `externalURL` and the rest are metadata, not writing — edit freely.
+- **Mechanical syntax migrations.** Changing how existing prose is encoded
+  without changing what it says: converting TOML front matter to YAML,
+  swapping `{{% %}}` delimiters for `{{< >}}`, moving a `{{< sidenote >}}`
+  inline to its point of reference, renumbering notes, repairing markdown
+  that renders wrong, updating a link whose target moved, rewrapping lines.
+  The test is whether the published words come out identical.
+
+Reviewing the writing is welcome; applying the review is not. Spelling,
+grammar, broken links, factual slips, clumsy sentences, structural
+suggestions — **report them, with file and line, and leave the file
+untouched.** Edd decides what lands and in whose voice.
+
+If a change sits somewhere between "mechanical" and "editorial", treat it as
+editorial: raise it and wait.
+
 ## Design
 
 `design/DESIGN.md` and `design/eddarmitage-design-concept.html` are the source
@@ -75,6 +102,8 @@ The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
   / `hugo -D`.
 - Front matter is YAML (`---`), matching the rest of this repo's content —
   not TOML (`+++`), even if content is copy-pasted from elsewhere.
+- Before editing anything under `content/`, re-read "The prose is the
+  author's" above — front matter and mechanical syntax fixes only.
 
 ## URL structure — do not change without checking backward-compat
 
