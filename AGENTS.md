@@ -24,15 +24,21 @@ The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
   goldmark's `unsafe = false` strips raw HTML emitted by percent-delimited
   shortcode output. (A consequence: markdown inside `{{< sidenote >}}` is not
   rendered — keep note bodies to plain text.)
-- **Choosing a note type.** Short marginal aside → `{{< ref >}}` inline at the
-  reference point, then `{{< sidenote >}}…{{< /sidenote >}}` immediately after
-  that paragraph. Long, multi-paragraph or citation-style note → goldmark
-  `[^label]`, which collects at the end of the article. See `design/DESIGN.md`
-  for why both exist rather than one.
-  - Both shortcodes auto-number from paired per-page counters, so write no
-    number: they must be called **once each, in matching order**, or the
-    marker and note numbers drift apart. `{{< ref 3 >}}` / `{{< sidenote num="3" >}}`
-    override the counter for the rare note referenced twice.
+- **Choosing a note type.** Short marginal aside →
+  `{{< sidenote >}}…{{< /sidenote >}}`, which emits both the marker and the
+  note. Long, multi-paragraph or citation-style note → goldmark `[^label]`,
+  which collects at the end of the article. See `design/DESIGN.md` for why
+  both exist rather than one.
+  - **Write `{{< sidenote >}}` inline, at the point of reference — not on its
+    own line after the paragraph.** A float can rise no higher than the line
+    box it sits in, so a note placed after the paragraph draws below the
+    marker instead of beside it. This is also why the note is a `<span>` and
+    not an `<aside>`: `<aside>` is flow content, so the parser would close the
+    open `<p>` at it and split the paragraph in two.
+  - It auto-numbers per page, so write no number. `{{< sidenote num="3" >}}`
+    pins one, paired with `{{< ref 3 >}}` for the rare note referenced a
+    second time — `{{< ref >}}` exists only for that case and errors the build
+    if called without a number.
   - **Notes belong to the article, not the feed.** Both kinds are rendered
     once per page, and the same HTML feeds `.Content` and `.Summary`, so a
     summary would otherwise carry the note *body* (a marginal aside with no

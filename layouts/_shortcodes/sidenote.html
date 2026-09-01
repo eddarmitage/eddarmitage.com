@@ -1,10 +1,18 @@
 {{- /*
-  A margin note. Floats into the right gutter on wide screens and collapses to
-  an inline callout on narrow ones — single source of content, no duplication.
+  A margin note: emits both the inline marker and the note itself.
 
-  Place it immediately after the paragraph containing its {{< ref >}} marker;
-  numbering is paired with that shortcode's counter. `num` overrides the
-  counter if a note ever needs a fixed number.
+  Call it inline, at the point of reference — NOT on its own line after the
+  paragraph. A float can rise no higher than the line box it sits in, so the
+  note has to be inside the paragraph, at the marker, to draw alongside it.
+
+  That is also why the note is a <span> rather than an <aside>: <aside> is flow
+  content, so the parser would close the open <p> at it and split the paragraph
+  in two. `role="doc-footnote"` carries the semantics instead. Keep bodies to
+  plain text — markdown is not rendered inside `{{< >}}` shortcodes, and a raw
+  <span> in the body would confuse the feed-summary partial's stripping.
+
+  Auto-numbers per page. `num` pins a number instead, for the rare note that is
+  referenced a second time via {{< ref N >}}.
 */ -}}
 {{- $n := 0 -}}
 {{- with (.Get "num" | default (.Get 0)) -}}
@@ -13,4 +21,4 @@
   {{- $n = add 1 (.Page.Store.Get "sidenoteCount" | default 0) -}}
   {{- .Page.Store.Set "sidenoteCount" $n -}}
 {{- end -}}
-<aside class="sidenote" id="sn:{{ $n }}" role="doc-footnote"><a class="num" href="#snref:{{ $n }}" role="doc-backlink">{{ printf "%02d" $n }}</a> &mdash; {{ .Inner }}</aside>
+<sup class="ref" id="snref:{{ $n }}"><a href="#sn:{{ $n }}" role="doc-noteref">{{ printf "%02d" $n }}</a></sup><span class="sidenote" id="sn:{{ $n }}" role="doc-footnote"><a class="num" href="#snref:{{ $n }}" role="doc-backlink">{{ printf "%02d" $n }}</a> &mdash; {{ .Inner }}</span>

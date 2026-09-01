@@ -172,10 +172,11 @@ h1.title{
 /* ---- Notes -------------------------------------------------
    Two deliberate patterns, sharing one visual language:
 
-   1. Sidenotes ({{< ref >}} + {{< sidenote >}}) — short marginal
-      asides. Float into the right gutter on wide screens, collapse
-      to an inline callout on narrow ones. Single source of content,
-      no duplication; marker and note link to each other.
+   1. Sidenotes ({{< sidenote >}}) — short marginal asides. Float
+      into the right gutter on wide screens, alongside the marker;
+      collapse to a tap-to-reveal callout on narrow ones. Single
+      source of content, no duplication; marker and note link to
+      each other.
    2. Footnotes (goldmark `[^1]`) — long, multi-paragraph or
       citation-style notes, collected at the end of the article.
 
@@ -183,7 +184,11 @@ h1.title{
    (as the TOC does); goldmark owns its own numerals, so footnotes
    stay plain decimal and match in font and colour instead.
    ------------------------------------------------------------ */
+/* The note is a <span> authored inline at its marker (see the sidenote
+   shortcode for why), so it needs display:block of its own — float
+   supplies that here, but the narrow-screen reveal below relies on it. */
 .sidenote{
+  display:block;
   float:right; clear:right;
   width:var(--note-width);
   margin-right:calc(-1 * (var(--note-width) + var(--note-gap)));
@@ -214,12 +219,22 @@ sup.ref a:hover{ text-decoration:underline; }
    scroll away rather than sitting alongside. */
 .sidenote:target, sup.ref:target a{ background:var(--accent-soft); }
 
+/* Below the gutter breakpoint there is no margin to float into, and the
+   note now sits mid-paragraph rather than after it — so left visible it
+   would interrupt the sentence it annotates. Collapse it instead and let
+   the marker reveal it.
+
+   The marker is already <a href="#sn:N">, so :target does this with no
+   extra markup, no checkbox and no JS: tapping 01 opens the note, and the
+   note's own backlink to #snref:N closes it again on the way back. Only
+   one note is open at a time, which is what you want on a small screen. */
 @media (max-width: 1099px){
   .sidenote{
+    display:none;
     float:none; width:auto; margin:14px 0; padding:10px 12px;
     background:var(--bg-subtle); border-left:3px solid var(--accent);
   }
-  .sidenote:target{ background:var(--accent-soft); }
+  .sidenote:target{ display:block; background:var(--accent-soft); }
 }
 
 pre{
@@ -419,7 +434,12 @@ sup[id^="fnref"]:target .footnote-ref{ background:var(--accent-soft); }
 @media print{
   .site-header nav, .icon-btn, .site-footer, .print-btn{ display:none !important; }
   body{ font-size:12pt; }
-  .sidenote{ float:none; width:auto; margin:8px 0; border-left:1px solid #999; background:none; }
+  /* A printed page is narrower than the gutter breakpoint, so the
+     tap-to-reveal rules apply here too and would print every unopened
+     note as nothing at all. Paper has no tapping — show them all. This
+     rule is later in the file than that media query and equally
+     specific, so it wins without !important. */
+  .sidenote{ display:block; float:none; width:auto; margin:8px 0; border-left:1px solid #999; background:none; }
   a{ text-decoration:none; color:#000; }
   .toc{ border:1px solid #999; background:none; }
   /* Backrefs are navigation, not content — nothing to click on paper.

@@ -45,8 +45,8 @@ nothing to self-host. Three roles:
 - Wider 900px canvas for header, footer, and grids (galleries, project cards),
   and to leave gutter room for sidenotes.
 - Breakpoints:
-  - `≥1100px` — desktop. Sidenotes float in the right margin next to the paragraph they annotate.
-  - `700–1099px` — sidenotes drop the float and become inline callout boxes right after the paragraph (same markup, no duplicated content).
+  - `≥1100px` — desktop. Sidenotes float in the right margin, level with the marker they hang off.
+  - `≤1099px` — no gutter to float into. The note collapses to a callout box that its marker reveals (same markup, no duplicated content); left visible it would interrupt the sentence it annotates, since it sits mid-paragraph.
   - `≤700px` — header stacks (wordmark, then nav); nav wraps via flexbox as needed.
   - `≤600px` — two-column layouts (e.g. recipe ingredients/method) collapse to one column.
   - `≤480px` — article H1 steps down from 38px to 28px so long titles don't run to 4–5 lines.
@@ -73,11 +73,13 @@ Feed items are tagged by type — the tag is both a visual rhythm device and rea
 - **TOC** — bordered box, mono decimal-leading-zero numbering, links to each `<h2 id="">`.
 - **"↑ Back to contents"** link after every `<h2>` section (in our own words, borrowed from jamesshore.com's "[Contents]" convention).
 - **Notes** — two patterns, chosen by the *kind* of note rather than as fallbacks for one another. Both are in the reference file.
-  - **Sidenotes** (`.sidenote`, via `{{< ref >}}` + `{{< sidenote >}}`) — short marginal asides. Floated into the right margin via CSS only (negative margin + float, single source of content, degrades to an inline callout at `<1100px`). The shortcodes auto-number per page and emit reciprocal anchors, so marker and note link to each other on every screen size and the note is reachable without JS. Numbering is decimal-leading-zero, matching the TOC.
+  - **Sidenotes** (`.sidenote`, via `{{< sidenote >}}`) — short marginal asides. Floated into the right margin via CSS only (negative margin + float, single source of content). The shortcode emits the marker and the note together, at the point of reference: a float can rise no higher than the line box it sits in, so the note has to be authored *inside* the paragraph to draw level with its marker rather than below the paragraph. That forces the note to be a `<span>` (an `<aside>` would close the open `<p>` and split the paragraph), with `role="doc-footnote"` carrying the semantics.
+    - Below `1100px` it collapses to a tap-to-reveal callout. The marker is already `<a href="#sn:N">`, so `:target` does the revealing with no extra markup, no checkbox and no JS — and the note's backlink to `#snref:N` closes it again on the way back. Only one note is open at a time, which is what a small screen wants. The print stylesheet re-shows them all, since a printed page is narrower than the breakpoint and nobody taps paper.
+    - Auto-numbers per page and emits reciprocal anchors, so marker and note link to each other at every screen size and the note is reachable without JS. Numbering is decimal-leading-zero, matching the TOC.
   - **Footnotes** (`.footnotes`, goldmark `[^1]`) — long, multi-paragraph or citation-style notes, collected at the end of the article under a mono "Notes" label. Goldmark owns the numbering, so these stay plain decimal and match the sidenotes in font and colour instead. Styled to share the sidenote visual language; `clear:both` keeps them off a trailing floated sidenote.
   - Why both: floated margin placement is free only because sidenote content is authored inline, and goldmark's linked backrefs are free only because its notes live at the bottom. Getting both properties from one pattern would need JS, which neither the print stylesheet nor a no-JS reader would benefit from.
 - **Code blocks** — dark background, accent-colored left border.
-- **Print** — dedicated `@media print` block: hides nav/footer/print-button, un-floats sidenotes, drops footnote backrefs and `:target` highlights (both are navigation, meaningless on paper), forces black-on-white. The article's print button just calls `window.print()`.
+- **Print** — dedicated `@media print` block: hides nav/footer/print-button, un-floats sidenotes and re-shows any the reveal rules would have collapsed, drops footnote backrefs and `:target` highlights (both are navigation, meaningless on paper), forces black-on-white. The article's print button just calls `window.print()`.
 
 ## Empty-state pattern
 
