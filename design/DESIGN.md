@@ -72,9 +72,12 @@ Feed items are tagged by type — the tag is both a visual rhythm device and rea
 - **Preface** — italic serif lead paragraph, sits above the TOC.
 - **TOC** — bordered box, mono decimal-leading-zero numbering, links to each `<h2 id="">`.
 - **"↑ Back to contents"** link after every `<h2>` section (in our own words, borrowed from jamesshore.com's "[Contents]" convention).
-- **Sidenotes** — floated into the right margin via CSS only (`.sidenote`, negative margin + float, single source of content, degrades to inline at `<1100px`). A plain numbered-footnotes-at-the-bottom pattern also exists (`.footnotes`) as a fallback if sidenotes prove awkward for a given article — both patterns are in the reference file.
+- **Notes** — two patterns, chosen by the *kind* of note rather than as fallbacks for one another. Both are in the reference file.
+  - **Sidenotes** (`.sidenote`, via `{{< ref >}}` + `{{< sidenote >}}`) — short marginal asides. Floated into the right margin via CSS only (negative margin + float, single source of content, degrades to an inline callout at `<1100px`). The shortcodes auto-number per page and emit reciprocal anchors, so marker and note link to each other on every screen size and the note is reachable without JS. Numbering is decimal-leading-zero, matching the TOC.
+  - **Footnotes** (`.footnotes`, goldmark `[^1]`) — long, multi-paragraph or citation-style notes, collected at the end of the article under a mono "Notes" label. Goldmark owns the numbering, so these stay plain decimal and match the sidenotes in font and colour instead. Styled to share the sidenote visual language; `clear:both` keeps them off a trailing floated sidenote.
+  - Why both: floated margin placement is free only because sidenote content is authored inline, and goldmark's linked backrefs are free only because its notes live at the bottom. Getting both properties from one pattern would need JS, which neither the print stylesheet nor a no-JS reader would benefit from.
 - **Code blocks** — dark background, accent-colored left border.
-- **Print** — dedicated `@media print` block: hides nav/footer/print-button, un-floats sidenotes, forces black-on-white. The article's print button just calls `window.print()`.
+- **Print** — dedicated `@media print` block: hides nav/footer/print-button, un-floats sidenotes, drops footnote backrefs and `:target` highlights (both are navigation, meaningless on paper), forces black-on-white. The article's print button just calls `window.print()`.
 
 ## Empty-state pattern
 
@@ -89,7 +92,7 @@ instead of solid, muted italic copy, small mono "eyebrow" label. See
 Covered by this spec + the reference file:
 
 - [x] Preface / TOC / article structure
-- [x] Footnotes and sidenotes (both patterns available)
+- [x] Footnotes and sidenotes (both patterns designed, with a rule for which to use)
 - [x] Content-type tagging (article / link / photos / food)
 - [x] Print stylesheet
 - [x] Photo gallery grid + caption treatment

@@ -22,7 +22,19 @@ The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
   `{{< ref >}}` and `{{< backtotoc >}}` shortcodes in `layouts/_shortcodes/`
   — use angle-bracket `{{< >}}` delimiters for these, not `{{% %}}`, since
   goldmark's `unsafe = false` strips raw HTML emitted by percent-delimited
-  shortcode output.
+  shortcode output. (A consequence: markdown inside `{{< sidenote >}}` is not
+  rendered — keep note bodies to plain text.)
+- **Choosing a note type.** Short marginal aside → `{{< ref >}}` inline at the
+  reference point, then `{{< sidenote >}}…{{< /sidenote >}}` immediately after
+  that paragraph. Long, multi-paragraph or citation-style note → goldmark
+  `[^label]`, which collects at the end of the article. See `design/DESIGN.md`
+  for why both exist rather than one.
+  - Both shortcodes auto-number from paired per-page counters, so write no
+    number: they must be called **once each, in matching order**, or the
+    marker and note numbers drift apart. `{{< ref 3 >}}` / `{{< sidenote num="3" >}}`
+    override the counter for the rare note referenced twice.
+  - They emit reciprocal `snref:N` ⇄ `sn:N` anchors; goldmark owns `fnref:N` /
+    `fn:N`, so the two namespaces never collide.
 - `layouts/posts/single.html` also handles Link-type posts (front matter
   `externalURL` set) with a stripped-down template instead of the full
   article layout.

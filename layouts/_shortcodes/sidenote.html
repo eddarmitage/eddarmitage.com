@@ -1,2 +1,16 @@
-{{- $num := .Get "num" | default (.Get 0) }}
-<div class="sidenote"><span class="num">{{ $num }}</span> &mdash; {{ .Inner }}</div>
+{{- /*
+  A margin note. Floats into the right gutter on wide screens and collapses to
+  an inline callout on narrow ones — single source of content, no duplication.
+
+  Place it immediately after the paragraph containing its {{< ref >}} marker;
+  numbering is paired with that shortcode's counter. `num` overrides the
+  counter if a note ever needs a fixed number.
+*/ -}}
+{{- $n := 0 -}}
+{{- with (.Get "num" | default (.Get 0)) -}}
+  {{- $n = int . -}}
+{{- else -}}
+  {{- $n = add 1 (.Page.Store.Get "sidenoteCount" | default 0) -}}
+  {{- .Page.Store.Set "sidenoteCount" $n -}}
+{{- end -}}
+<aside class="sidenote" id="sn:{{ $n }}" role="doc-footnote"><a class="num" href="#snref:{{ $n }}" role="doc-backlink">{{ printf "%02d" $n }}</a> &mdash; {{ .Inner }}</aside>
