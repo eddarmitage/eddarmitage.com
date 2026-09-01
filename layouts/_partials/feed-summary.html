@@ -1,0 +1,31 @@
+{{- /*
+  Returns a page's feed summary with its notes turned into links to the article.
+
+  A note's body is an article-reading device, not a feed one: on the home page
+  and the section lists a summary is a few lines of teaser, so a marginal aside
+  has nowhere to go. The marker stays — it is part of the sentence — but is
+  repointed at the article's own anchor, so following it from a list lands on
+  the post exactly where clicking the reference there would.
+
+  That also settles the ids: several cards on one page would otherwise each
+  carry their own `snref:1` / `fnref:1`, duplicating those ids across the
+  document, so the marker sheds its id here and only the article keeps one
+  (which is what the note's backlink points at anyway).
+
+  Shortcodes and goldmark render once per page and the same HTML feeds both
+  `.Content` and `.Summary`, so there is no render-time context to branch on —
+  the rewriting has to happen here instead.
+
+  Context: a regular Page. Call with `partial "feed-summary.html" .`.
+*/ -}}
+{{- $s := .Summary | string -}}
+{{- /* Note bodies: the {{< sidenote >}} aside, and — for a post short enough
+       that the summary reaches the end of the content — goldmark's collected
+       footnote list, which it always emits last. Both go before the hrefs are
+       rewritten, so their own internal backlinks leave with them. */ -}}
+{{- $s = replaceRE `(?s)<aside class="sidenote".*?</aside>` "" $s -}}
+{{- $s = replaceRE `(?s)<div class="footnotes"[^>]*>.*` "" $s -}}
+{{- /* Markers: drop the ids, and send the links to the article. */ -}}
+{{- $s = replaceRE ` id="(snref|fnref):[0-9]+"` "" $s -}}
+{{- $s = replaceRE `href="#(sn|fn):` (printf `href="%s#$1:` .Permalink) $s -}}
+{{- $s | safeHTML -}}

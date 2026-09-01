@@ -23,7 +23,7 @@
       <link>{{ with .Params.externalURL }}{{ . }}{{ else }}{{ .Permalink }}{{ end }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
       <guid>{{ .Permalink }}</guid>
-      <description>{{ with .Params.description }}{{ . }}{{ else }}{{ .Summary | html }}{{ end }}</description>
+      <description>{{ with .Params.description }}{{ . }}{{ else }}{{ partial "feed-summary.html" . | html }}{{ end }}</description>
     </item>
     {{- end }}
   </channel>

@@ -14,7 +14,7 @@ nav) — implement against these, not from scratch.
 The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
 (no theme submodule — PaperMod has been removed). Key pieces:
 
-- `layouts/baseof.html` + `layouts/_partials/{head,header,footer,social-icons,feed-item}.html`
+- `layouts/baseof.html` + `layouts/_partials/{head,header,footer,social-icons,feed-item,feed-summary}.html`
   — shared chrome.
 - `layouts/posts/single.html` — article template (preface, auto-generated TOC
   from `.TableOfContents`, footnotes via goldmark). Sidenotes and "back to
@@ -33,6 +33,16 @@ The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
     number: they must be called **once each, in matching order**, or the
     marker and note numbers drift apart. `{{< ref 3 >}}` / `{{< sidenote num="3" >}}`
     override the counter for the rare note referenced twice.
+  - **Notes belong to the article, not the feed.** Both kinds are rendered
+    once per page, and the same HTML feeds `.Content` and `.Summary`, so a
+    summary would otherwise carry the note *body* (a marginal aside with no
+    gutter to sit in, or goldmark's collected list) and repeat `snref:1` /
+    `fnref:1` on every card. `layouts/_partials/feed-summary.html` strips the
+    bodies back out and repoints each marker at the article's own anchor, so
+    following one from a list lands on the post where clicking the reference
+    there would. It is what `feed-item.html` and `index.rss.xml` call instead
+    of `.Summary` — if a third note construct is ever added, teach that
+    partial about it too.
   - They emit reciprocal `snref:N` ⇄ `sn:N` anchors; goldmark owns `fnref:N` /
     `fn:N`, so the two namespaces never collide.
 - `layouts/posts/single.html` also handles Link-type posts (front matter
