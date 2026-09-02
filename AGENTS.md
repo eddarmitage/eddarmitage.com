@@ -93,6 +93,15 @@ var config binding). This makes preview deployment tabs visually
 distinguishable from production. `hugo server -D` still runs as `"prod"`
 unless that env var is set locally.
 
+`apple-touch-icon.png`/`apple-touch-icon-dev.png` are deliberately flattened
+to fully opaque RGB (no alpha channel) — every other icon in the set keeps
+its transparent background since it renders on the browser's own chrome, but
+iOS composites an unpredictable fill behind a transparent home-screen icon,
+so these two are composited onto a pale tint of their own environment's
+accent (`--accent-soft` for prod, an analogous tint of the dev purple) before
+being saved. If the source pixel art is ever regenerated, re-flatten these
+two the same way rather than re-exporting them transparent.
+
 ## QR codes
 
 Every published page gets a `qr` alongside it (e.g. `/about/qr`, `/food/qr`,
