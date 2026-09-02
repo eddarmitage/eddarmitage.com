@@ -1,9 +1,12 @@
 /* ============================================================
    TOKENS
    Single baked-in accent (orange) — no runtime theme switcher.
-   See design/DESIGN.md for the source spec.
+   Dark palette follows OS/browser preference only (prefers-color-scheme),
+   same "no runtime switcher" rule — see design/DESIGN.md and issue #46.
    ============================================================ */
 :root{
+  color-scheme: light dark;
+
   --bg: #ffffff;
   --bg-subtle: #f5f6f8;
   --bg-inset: #eef0f3;
@@ -23,6 +26,34 @@
   --measure: 640px;
   --note-width: 220px;
   --note-gap: 28px;
+}
+
+/* "Cool slate" — see the dark-mode research on issue #46 for the
+   contrast table and rationale. --accent-strong/--accent-soft invert
+   luminance role rather than just lightening: --accent-strong is a
+   *foreground* (nav/TOC/sidenote text) and needs to stay light on a
+   dark page; --accent-soft is a *background* tint (tag chips, :target
+   highlight) and needs to go dark instead of pale. */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #14171c;
+    --bg-subtle: #1b1f26;
+    --bg-inset: #232830;
+    --text: #e7e9ec;
+    --text-body: #cdd1d7;
+    --text-muted: #9aa3b0;
+    --border: #2d323b;
+
+    --accent: #d9843f;
+    --accent-soft: #33251a;
+    --accent-strong: #f0a868;
+  }
+
+  /* pre's background is a fixed dark hex (not a token) because it's
+     meant to read as an inset block against a *light* page; reused
+     verbatim it would nearly match the new dark --bg and lose that
+     contrast, so give it the dark-mode --bg-inset step instead. */
+  pre{ background: var(--bg-inset); }
 }
 
 *{ box-sizing:border-box; }
