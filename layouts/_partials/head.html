@@ -18,7 +18,8 @@
 <link rel="icon" type="image/png" sizes="48x48" href="{{ $assets.favicon48x48 | absURL }}">
 <link rel="apple-touch-icon" href="{{ $assets.appleTouchIcon | absURL }}">
 <link rel="manifest" href="{{ $assets.webmanifest | absURL }}">
-<meta name="theme-color" content="{{ $assets.theme_color }}">
+<meta name="theme-color" content="{{ $assets.theme_color }}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{{ $assets.theme_color_dark }}" media="(prefers-color-scheme: dark)">
 
 {{- range .AlternativeOutputFormats }}
 <link rel="{{ .Rel }}" type="{{ .MediaType.Type | html }}" href="{{ .Permalink | safeURL }}" title="{{ site.Title }}">

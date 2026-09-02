@@ -1,13 +1,17 @@
 /* ============================================================
    TOKENS
    Single baked-in accent (orange) — no runtime theme switcher.
-   See design/DESIGN.md for the source spec.
+   Dark palette follows OS/browser preference only (prefers-color-scheme),
+   same "no runtime switcher" rule — see design/DESIGN.md and issue #46.
    ============================================================ */
 :root{
+  color-scheme: light dark;
+
   --bg: #ffffff;
   --bg-subtle: #f5f6f8;
   --bg-inset: #eef0f3;
   --text: #14171c;
+  --text-body: #333333;
   --text-muted: #5b6472;
   --border: #e3e6ea;
 
@@ -22,6 +26,34 @@
   --measure: 640px;
   --note-width: 220px;
   --note-gap: 28px;
+}
+
+/* "Cool slate" — see the dark-mode research on issue #46 for the
+   contrast table and rationale. --accent-strong/--accent-soft invert
+   luminance role rather than just lightening: --accent-strong is a
+   *foreground* (nav/TOC/sidenote text) and needs to stay light on a
+   dark page; --accent-soft is a *background* tint (tag chips, :target
+   highlight) and needs to go dark instead of pale. */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #14171c;
+    --bg-subtle: #1b1f26;
+    --bg-inset: #232830;
+    --text: #e7e9ec;
+    --text-body: #cdd1d7;
+    --text-muted: #9aa3b0;
+    --border: #2d323b;
+
+    --accent: #d9843f;
+    --accent-soft: #33251a;
+    --accent-strong: #f0a868;
+  }
+
+  /* pre's background is a fixed dark hex (not a token) because it's
+     meant to read as an inset block against a *light* page; reused
+     verbatim it would nearly match the new dark --bg and lose that
+     contrast, so give it the dark-mode --bg-inset step instead. */
+  pre{ background: var(--bg-inset); }
 }
 
 *{ box-sizing:border-box; }
@@ -101,7 +133,7 @@ main{ max-width:900px; margin:0 auto; padding:0 20px; }
 }
 .feed-item h3 a{ text-decoration:none; }
 .feed-item h3 a:hover{ text-decoration:underline; text-decoration-color:var(--accent); }
-.feed-item p{ margin:0 0 8px; color:#333; }
+.feed-item p{ margin:0 0 8px; color:var(--text-body); }
 .feed-item .more{
   font-family:var(--font-mono); font-size:13px; color:var(--accent-strong);
   text-decoration:none;
@@ -135,7 +167,7 @@ h1.title{
 }
 .preface{
   font-family:var(--font-serif); font-size:19px; font-style:italic;
-  color:#333; max-width:var(--measure); margin:0 0 26px; line-height:1.55;
+  color:var(--text-body); max-width:var(--measure); margin:0 0 26px; line-height:1.55;
 }
 .toc{
   max-width:var(--measure); border:1px solid var(--border); border-radius:6px;
@@ -298,7 +330,7 @@ sup[id^="fnref"]:target .footnote-ref{ background:var(--accent-soft); }
 .project-card{ border:1px solid var(--border); border-radius:8px; padding:20px 22px; scroll-margin-top:20px; }
 .project-card:target{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
 .project-card h2{ font-family:var(--font-serif); font-size:18px; margin:0 0 8px; }
-.project-card p{ font-size:14px; color:#333; margin:0 0 14px; }
+.project-card p{ font-size:14px; color:var(--text-body); margin:0 0 14px; }
 .project-links{ display:flex; gap:16px; font-family:var(--font-mono); font-size:12px; }
 .project-links a{ color:var(--accent-strong); text-decoration:none; }
 .project-links a:hover{ text-decoration:underline; }

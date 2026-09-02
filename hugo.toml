@@ -49,6 +49,7 @@ disableKinds = ["taxonomy", "term"]
     webmanifest = "assets/site.webmanifest"
     logo = "assets/android-chrome-512x512.png"
     theme_color = "#f19e54"
+    theme_color_dark = "#7a4a1f"
 
   [params.assetsDev]
     favicon = "assets/favicon-dev.ico"
@@ -60,6 +61,7 @@ disableKinds = ["taxonomy", "term"]
     webmanifest = "assets/site-dev.webmanifest"
     logo = "assets/android-chrome-512x512-dev.png"
     theme_color = "#9b4f96"
+    theme_color_dark = "#5e3660"
 
   [[params.socialIcons]]
     name = "github"
