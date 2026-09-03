@@ -4,6 +4,33 @@ Hugo static site for eddarmitage.com, hosted on Cloudflare Pages. Migrated from
 Jekyll+GitHub Pages in 2026 (see PR #4 and git history for the full migration
 rationale).
 
+## The prose is the author's — agents do not write it
+
+The words under `content/` are Edd's writing. **Agents must not draft,
+rewrite, extend, condense, restructure or otherwise "improve" the body of a
+post, project write-up, photo caption or recipe** — not as a first draft, not
+as a suggested paragraph slipped in silently, and not as a tidy-up on the way
+past while doing something else.
+
+What an agent *may* change in a content file:
+
+- **Front matter.** `title`, `date`, `draft`, `tags`, `summary`,
+  `externalURL` and the rest are metadata, not writing — edit freely.
+- **Mechanical syntax migrations.** Changing how existing prose is encoded
+  without changing what it says: converting TOML front matter to YAML,
+  swapping `{{% %}}` delimiters for `{{< >}}`, moving a `{{< sidenote >}}`
+  inline to its point of reference, renumbering notes, repairing markdown
+  that renders wrong, updating a link whose target moved, rewrapping lines.
+  The test is whether the published words come out identical.
+
+Reviewing the writing is welcome; applying the review is not. Spelling,
+grammar, broken links, factual slips, clumsy sentences, structural
+suggestions — **report them, with file and line, and leave the file
+untouched.** Edd decides what lands and in whose voice.
+
+If a change sits somewhere between "mechanical" and "editorial", treat it as
+editorial: raise it and wait.
+
 ## Design
 
 `design/DESIGN.md` and `design/eddarmitage-design-concept.html` are the source
@@ -14,7 +41,7 @@ nav) — implement against these, not from scratch.
 The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
 (no theme submodule — PaperMod has been removed). Key pieces:
 
-- `layouts/baseof.html` + `layouts/_partials/{head,header,footer,social-icons,feed-item}.html`
+- `layouts/baseof.html` + `layouts/_partials/{head,header,footer,social-icons,feed-item,feed-summary}.html`
   — shared chrome.
 - `layouts/posts/single.html` — article template (preface, auto-generated TOC
   from `.TableOfContents`, footnotes via goldmark). Sidenotes and "back to
@@ -24,15 +51,31 @@ The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
   goldmark's `unsafe = false` strips raw HTML emitted by percent-delimited
   shortcode output. (A consequence: markdown inside `{{< sidenote >}}` is not
   rendered — keep note bodies to plain text.)
-- **Choosing a note type.** Short marginal aside → `{{< ref >}}` inline at the
-  reference point, then `{{< sidenote >}}…{{< /sidenote >}}` immediately after
-  that paragraph. Long, multi-paragraph or citation-style note → goldmark
-  `[^label]`, which collects at the end of the article. See `design/DESIGN.md`
-  for why both exist rather than one.
-  - Both shortcodes auto-number from paired per-page counters, so write no
-    number: they must be called **once each, in matching order**, or the
-    marker and note numbers drift apart. `{{< ref 3 >}}` / `{{< sidenote num="3" >}}`
-    override the counter for the rare note referenced twice.
+- **Choosing a note type.** Short marginal aside →
+  `{{< sidenote >}}…{{< /sidenote >}}`, which emits both the marker and the
+  note. Long, multi-paragraph or citation-style note → goldmark `[^label]`,
+  which collects at the end of the article. See `design/DESIGN.md` for why
+  both exist rather than one.
+  - **Write `{{< sidenote >}}` inline, at the point of reference — not on its
+    own line after the paragraph.** A float can rise no higher than the line
+    box it sits in, so a note placed after the paragraph draws below the
+    marker instead of beside it. This is also why the note is a `<span>` and
+    not an `<aside>`: `<aside>` is flow content, so the parser would close the
+    open `<p>` at it and split the paragraph in two.
+  - It auto-numbers per page, so write no number. `{{< sidenote num="3" >}}`
+    pins one, paired with `{{< ref 3 >}}` for the rare note referenced a
+    second time — `{{< ref >}}` exists only for that case and errors the build
+    if called without a number.
+  - **Notes belong to the article, not the feed.** Both kinds are rendered
+    once per page, and the same HTML feeds `.Content` and `.Summary`, so a
+    summary would otherwise carry the note *body* (a marginal aside with no
+    gutter to sit in, or goldmark's collected list) and repeat `snref:1` /
+    `fnref:1` on every card. `layouts/_partials/feed-summary.html` strips the
+    bodies back out and repoints each marker at the article's own anchor, so
+    following one from a list lands on the post where clicking the reference
+    there would. It is what `feed-item.html` and `index.rss.xml` call instead
+    of `.Summary` — if a third note construct is ever added, teach that
+    partial about it too.
   - They emit reciprocal `snref:N` ⇄ `sn:N` anchors; goldmark owns `fnref:N` /
     `fn:N`, so the two namespaces never collide.
 - `layouts/posts/single.html` also handles Link-type posts (front matter
@@ -59,6 +102,8 @@ The custom theme is implemented directly in `layouts/` and `assets/css/main.css`
   / `hugo -D`.
 - Front matter is YAML (`---`), matching the rest of this repo's content —
   not TOML (`+++`), even if content is copy-pasted from elsewhere.
+- Before editing anything under `content/`, re-read "The prose is the
+  author's" above — front matter and mechanical syntax fixes only.
 
 ## URL structure — do not change without checking backward-compat
 

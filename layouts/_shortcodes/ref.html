@@ -1,22 +1,16 @@
 {{- /*
-  Inline marker for a {{< sidenote >}}. Auto-numbers per page and links to the
-  matching note, which links back. Call once per sidenote, in the same order as
-  the notes themselves — the two counters are paired positionally.
+  A *second* marker for a note that {{< sidenote >}} has already emitted — the
+  rare case where one note is referenced twice.
 
-  An explicit number ({{< ref 3 >}}) overrides the counter for both the label
-  and the anchor, for the rare case where a note is referenced twice.
+  The number is required: {{< sidenote >}} owns the counter, so there is nothing
+  sensible to auto-number against here, and guessing would silently point the
+  marker at the wrong note.
+
+  This marker carries no `snref:N` id — the note's own backlink already points
+  at the primary marker, and a duplicate id would be invalid anyway.
 */ -}}
-{{- $n := 0 -}}
-{{- $primary := true -}}
-{{- with .Get 0 -}}
-  {{- /* An explicit number means this is a second reference to a note that
-         already has a marker elsewhere. It must not claim the `snref:N` id
-         again — duplicate ids are invalid and would make the note's backref
-         ambiguous — so only the auto-numbered marker carries one. */ -}}
-  {{- $n = int . -}}
-  {{- $primary = false -}}
-{{- else -}}
-  {{- $n = add 1 (.Page.Store.Get "sidenoteRefCount" | default 0) -}}
-  {{- .Page.Store.Set "sidenoteRefCount" $n -}}
+{{- $n := .Get 0 -}}
+{{- if not $n -}}
+  {{- errorf "%s: {{< ref >}} needs the number of the note it points at, e.g. {{< ref 3 >}} alongside {{< sidenote num=\"3\" >}}" .Position -}}
 {{- end -}}
-<sup class="ref"{{ if $primary }} id="snref:{{ $n }}"{{ end }}><a href="#sn:{{ $n }}" role="doc-noteref">{{ printf "%02d" $n }}</a></sup>
+<sup class="ref"><a href="#sn:{{ int $n }}" role="doc-noteref">{{ printf "%02d" (int $n) }}</a></sup>

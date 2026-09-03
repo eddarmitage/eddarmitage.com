@@ -1,6 +1,7 @@
 ---
 title: "Hosting a static site"
-date: 2023-06-17
+date: 2026-08-31
+draft: true
 ---
 
 I've wanted to host a simple little website for many years now, but never had the inclination to invest too much (be

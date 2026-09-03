@@ -3,6 +3,7 @@
   <h1>{{ .Title }}</h1>
   <div class="projects-grid">
     {{- range .Pages.ByTitle }}
+    {{- $project := . }}
     <article class="project-card" id="{{ .File.ContentBaseName }}">
       <h2>{{ .Title }}</h2>
       <div class="project-card-body">
@@ -11,7 +12,18 @@
       {{- with .Params.links }}
       <div class="project-links">
         {{- range . }}
+        {{- /* `page` (a content path) links to somewhere on this site, `url` off
+               it. Front matter can't call {{< relref >}}, so resolve the path
+               here rather than hardcoding a permalink that an #36-style scheme
+               change would silently rot — a missing target fails the build,
+               just as relref would. Internal links stay in the same tab. */ -}}
+        {{- if .page }}
+        {{- $target := site.GetPage .page }}
+        {{- if not $target }}{{ errorf "%s: links entry points at %q, which is not a published page" $project.File.Path .page }}{{ end }}
+        <a href="{{ $target.RelPermalink }}">{{ .label | default $target.Title }} &rarr;</a>
+        {{- else }}
         <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .label }} &rarr;</a>
+        {{- end }}
         {{- end }}
       </div>
       {{- end }}
